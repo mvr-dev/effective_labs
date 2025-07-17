@@ -21,7 +21,7 @@ public class BaristaService implements IBaristaService {
 
     @Override
     public Barista getBaristaById(Long id) {
-        return repository.getReferenceById(id);
+        return repository.findById(id).orElse(null);
     }
 
     @Override

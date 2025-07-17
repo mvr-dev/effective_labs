@@ -25,7 +25,6 @@ public class CustomerController {
         return service.addCustomer(Customer);
     }
     @PutMapping("/{id}")
-    //TODO
     public  Customer updateCustomer(@PathVariable Long id, @RequestBody Customer Customer){
         Customer.setId(id);
         return service.updateCustomer(Customer);
