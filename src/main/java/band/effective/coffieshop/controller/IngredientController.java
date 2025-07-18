@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+//strange work
 @RestController
 @RequestMapping("/ingredients")
 @AllArgsConstructor
