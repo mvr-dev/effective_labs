@@ -22,7 +22,7 @@ public class CoffeeService implements ICoffeeService {
 
     @Override
     public Coffee getCoffeeById(Long id) {
-        return repository.getReferenceById(id);
+        return repository.findById(id).orElse(null);
     }
 
     @Override

@@ -47,6 +47,5 @@ public class IngredientService implements IIngredientService {
     @Override
     public void deleteIngredient(Ingredient ingredient) {
         repository.delete(ingredient);
-
     }
 }

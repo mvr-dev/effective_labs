@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
-import java.lang.annotation.Target;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -22,14 +21,15 @@ public class Coffee {
     @NotEmpty
     private String name;
 
-    @ManyToMany
-    @CollectionTable(
-            name = "coffee_ingredient",
-            joinColumns = @JoinColumn(name = "ingredient_id")
-    )
-    @JoinTable(name = "coffee_ingredient",
-            joinColumns = @JoinColumn(name = "ingredient_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "coffee_id",referencedColumnName = "id"))
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
 
+//    @CollectionTable(
+//            name = "coffee_ingredient",
+//            joinColumns = @JoinColumn(name = "ingredient_id")
+//    )
+    @JoinTable(name = "coffee_ingredient",
+            joinColumns = @JoinColumn(name = "coffee_id"), // исправлено
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     private Set<Ingredient> ingredients;
+
 }

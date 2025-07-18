@@ -1,5 +1,6 @@
 package band.effective.coffieshop.model;
 
+import band.effective.coffieshop.repository.IngredientRepository;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -25,7 +26,8 @@ public class Ingredient {
     @NonNull
     @Min(value = 0)
     private Double quantity;
-    @ManyToMany(mappedBy = "ingredients")
+    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "ingredients",cascade = CascadeType.MERGE)
     private Set<Coffee> coffeesWith;
+
 
 }
