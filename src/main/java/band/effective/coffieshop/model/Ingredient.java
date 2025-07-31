@@ -29,7 +29,7 @@ public class Ingredient {
     private Double quantity;
     @ManyToMany(mappedBy = "ingredients")
     @JsonIgnore
-    @ToString.Exclude  // Важно для Lombok
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Coffee> coffeesWith;
 

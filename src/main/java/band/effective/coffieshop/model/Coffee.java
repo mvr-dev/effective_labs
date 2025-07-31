@@ -6,11 +6,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
 import java.util.Set;
-//many-to many problem
+
 @Data
 @Entity
 @AllArgsConstructor

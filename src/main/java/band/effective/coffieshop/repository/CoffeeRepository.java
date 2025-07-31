@@ -14,6 +14,4 @@ public interface CoffeeRepository extends JpaRepository<Coffee,Long> {
     @Query("SELECT c FROM Coffee c LEFT JOIN FETCH c.ingredients WHERE c.id = :id")
     Optional<Coffee> findByIdWithIngredients(@Param("id") Long id);
 
-//    @Query("DELETE FROM coffee_ingredient c where c.coffee_id = :id")
-//    void  deleteIngredientsFromCoffeeById(@Param("id") Long id);
 }
