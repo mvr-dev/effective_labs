@@ -3,6 +3,7 @@ package band.effective.coffieshop.service.impl;
 import band.effective.coffieshop.model.Ingredient;
 import band.effective.coffieshop.repository.IngredientRepository;
 import band.effective.coffieshop.service.IIngredientService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,9 @@ public class IngredientService implements IIngredientService {
     }
 
     @Override
+    @Transactional
     public Ingredient getIngredientById(Long id) {
-        return repository.getReferenceById(id);
+        return repository.findByIdWithCoffees(id).orElse(null);
     }
 
     @Override
@@ -46,6 +48,7 @@ public class IngredientService implements IIngredientService {
 
     @Override
     public void deleteIngredient(Ingredient ingredient) {
+
         repository.delete(ingredient);
     }
 }

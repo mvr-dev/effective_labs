@@ -25,7 +25,6 @@ public class BaristaController {
         return service.addBarista(barista);
     }
     @PutMapping("/{id}")
-    //TODO
     public  Barista updateBarista(@PathVariable Long id, @RequestBody Barista barista){
         barista.setId(id);
         return service.updateBarista(barista);
