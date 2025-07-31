@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class IngredientRequestDTO {
     private String name;
     private Double quantity;
+//just a comm
 }
