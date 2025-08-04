@@ -65,4 +65,8 @@ public class CoffeeService implements ICoffeeService {
 //        return new HashSet<>(ingredientRepository.findAllById(ingredientsIds));
 
     }
+
+    public List<Coffee> getAllById(Iterable<Long> ids){
+        return repository.findAllById(ids);
+    }
 }
