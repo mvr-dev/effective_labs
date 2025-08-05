@@ -14,4 +14,7 @@ public interface CoffeeRepository extends JpaRepository<Coffee,Long> {
     @Query("SELECT c FROM Coffee c LEFT JOIN FETCH c.ingredients WHERE c.id = :id")
     Optional<Coffee> findByIdWithIngredients(@Param("id") Long id);
 
+    @EntityGraph(attributePaths = {"customerOrders"})
+    @Query("SELECT c FROM Coffee c LEFT JOIN FETCH c.customerOrders WHERE c.id = :id")
+    Optional<Coffee> findCoffeesByIdWithOrders(@Param("id") Long id);
 }

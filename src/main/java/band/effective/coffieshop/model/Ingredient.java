@@ -1,6 +1,7 @@
 package band.effective.coffieshop.model;
 
 import band.effective.coffieshop.repository.IngredientRepository;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -32,6 +33,11 @@ public class Ingredient {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Coffee> coffeesWith;
+
+    @NonNull
+    @Min(0)
+    @JsonAlias({"price_per_one", "cost_per_one"})
+    private Double costPerOne;
 
 
 }

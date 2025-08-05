@@ -13,4 +13,5 @@ import java.util.List;
 public class CoffeeRequestDTO {
     private String name;
     private List<Long> ingredients;
+    private Double price;
 }

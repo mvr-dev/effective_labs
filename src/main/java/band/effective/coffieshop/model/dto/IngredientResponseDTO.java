@@ -16,4 +16,5 @@ public class IngredientResponseDTO {
     private String name;
     private Double quantity;
     private List<String> coffees_with;
+    private Double cost_per_one;
 }

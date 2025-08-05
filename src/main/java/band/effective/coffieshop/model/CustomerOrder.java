@@ -1,5 +1,7 @@
 package band.effective.coffieshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,11 +21,13 @@ public class CustomerOrder {
     @ManyToOne
     private Barista barista;
 
-    @ManyToOne
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
     @NonNull
     @ManyToMany(mappedBy = "customerOrders")
+    @JsonIgnore
     private List<Coffee> coffees;
 
     private OrderStatus status;

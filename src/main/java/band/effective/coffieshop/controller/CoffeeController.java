@@ -21,35 +21,30 @@ import java.util.Set;
 public class CoffeeController {
     private final CoffeeService service;
 
-//    private final CoffeeRepository coffeeRepository;
-
     private final IngredientRepository ingredientRepository;
 
     @GetMapping
     public List<CoffeeResponseDTO> getAllCoffees(){
         var coffees = service.getAllCoffees();
-        return coffees.stream().peek(System.out::println).map(coffee -> CoffeeResponseDTO.builder()
-                .id(coffee.getId())
-                .name(coffee.getName())
-                .ingredients(coffee.getIngredients().stream().map(Ingredient::getName).toList())
-                .build()).peek(System.out::println).toList();
+        return coffees.stream().peek(System.out::println).map(CoffeeResponseDTO::fromEntry).toList();
     }
     @GetMapping("/{id}")
     public CoffeeResponseDTO getCoffeeById(@PathVariable Long id){
         System.out.println("get coffee "+id);
         var coffee = service.getCoffeeById(id);
         System.out.println(coffee);
-        return CoffeeResponseDTO.builder()
-                .id(coffee.getId())
-                .name(coffee.getName())
-                .ingredients(coffee.getIngredients().stream().peek(System.out::println).map(Ingredient::getName).toList())
-                .build();
+        return CoffeeResponseDTO.fromEntry(coffee);
     }
 
     @PutMapping("/{id}")
     public Coffee updateCoffeeById(@PathVariable Long id,@RequestBody CoffeeRequestDTO coffee){
         Set<Ingredient> ingredients = new HashSet<>(ingredientRepository.findAllById(coffee.getIngredients()));
-        Coffee coffee1 = Coffee.builder().id(id).name(coffee.getName()).ingredients(ingredients).build();
+        Coffee coffee1 = Coffee.builder()
+                .id(id)
+                .name(coffee.getName())
+                .ingredients(ingredients)
+                .costPrice(ingredients.stream().mapToDouble(Ingredient::getCostPerOne).sum())
+                .build();
         System.out.println(coffee);
         System.out.println(coffee1);
         return service.updateCoffee(coffee1);
@@ -58,7 +53,12 @@ public class CoffeeController {
     public Coffee putCoffee(@RequestBody CoffeeRequestDTO coffee){
         Set<Ingredient> ingredients = new HashSet<>(ingredientRepository.findAllById(coffee.getIngredients()));
         System.out.println(ingredients);
-        Coffee coffee1 = Coffee.builder().name(coffee.getName()).ingredients(ingredients).build();
+        Coffee coffee1 = Coffee.builder()
+                .name(coffee.getName())
+                .ingredients(ingredients)
+                .price(coffee.getPrice())
+                .costPrice(ingredients.stream().mapToDouble(Ingredient::getCostPerOne).sum())
+                .build();
         System.out.println(coffee1);
         return service.addCoffee(coffee1);
     }

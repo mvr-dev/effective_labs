@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class OrderController {
 
     @GetMapping
     public List<OrderResponseDTO> getOrders(){
-        return service.getAllOrders().stream().map(
+        return service.getAllOrders().stream().peek(System.out::println).map(
                 OrderResponseDTO::fromEntry).toList();
     }
 
@@ -42,8 +43,11 @@ public class OrderController {
 
     @PostMapping
     public OrderResponseDTO postOrder(@RequestBody OrderRequestDTO orderRequestDTO){
+        System.out.println(orderRequestDTO);
+        var coffees = coffeeService.getAllCoffees();
+        System.out.println(coffees);
         CustomerOrder order = CustomerOrder.builder()
-                .coffees(coffeeService.getAllById(orderRequestDTO.getCoffeesId()))
+                .coffees(coffees)
                 .barista(baristaService.getBaristaById(orderRequestDTO.getBaristaId()))
                 .price(coffeeService.getAllById(orderRequestDTO.getCoffeesId())
                         .stream().mapToDouble(Coffee::getPrice).sum())
@@ -51,11 +55,47 @@ public class OrderController {
                 .build();
                 if (orderRequestDTO.getCustomerId()!=null){
                     order.setCustomer(customerService.getCustomerById(orderRequestDTO.getCustomerId()));
+//                    customerService.getCustomerById(orderRequestDTO.getCustomerId())
                 }
                 else
                     order.setCustomer(null);
-                service.addOrder(order);
-                return OrderResponseDTO.fromEntry(order);
+        System.out.println(order);
+        service.addOrder(order);
+        return OrderResponseDTO.fromEntry(order);
+    }
+    @PutMapping("/{id}")
+    public OrderResponseDTO updateOrder(@PathVariable Long id,@RequestBody OrderRequestDTO requestDTO){
+        CustomerOrder order = service.getOrderById(id);
+        System.out.println(requestDTO);
+        System.out.println(order);
+        if (order.getStatus()!=OrderStatus.COOKING){
+            return OrderResponseDTO.fromEntry(order);
+        }
+        order.setId(id);
+        if(requestDTO.getCustomerId()!=null){
+            order.setCustomer(customerService.getCustomerById(requestDTO.getCustomerId()));
+        }
+        if(requestDTO.getBaristaId()!=null){
+            order.setBarista(baristaService.getBaristaById(requestDTO.getBaristaId()));
+        }
+        if(requestDTO.getStatus()!=null){
+            if(requestDTO.getStatus()>=0 && requestDTO.getStatus()<=2){
+                order.setStatus(OrderStatus.values()[requestDTO.getStatus()]);
+            }
+            else
+                throw new IllegalArgumentException();
+        }
+        if(requestDTO.getCoffeesId()!=null){
+            order.setCoffees(coffeeService.getAllById(requestDTO.getCoffeesId()));
+        }
+        System.out.println(order);
+        service.updateOrder(order);
+        return OrderResponseDTO.fromEntry(order);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteOrder(@PathVariable Long id){
+        service.deleteOrder(service.getOrderById(id));
     }
 
 }
