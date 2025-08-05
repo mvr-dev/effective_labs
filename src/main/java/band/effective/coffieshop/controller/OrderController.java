@@ -97,7 +97,12 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public void deleteOrder(@PathVariable Long id){
-        service.deleteOrder(service.getOrderById(id));
+        var order =  service.getOrderById(id);
+        for(Coffee coffee : order.getCoffees()){
+            coffee.getCustomerOrders().remove(order);
+        }
+        order.getCoffees().clear();
+        service.deleteOrder(order);
     }
 
 }
