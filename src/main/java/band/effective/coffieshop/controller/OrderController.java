@@ -44,7 +44,7 @@ public class OrderController {
     @PostMapping
     public OrderResponseDTO postOrder(@RequestBody OrderRequestDTO orderRequestDTO){
         System.out.println(orderRequestDTO);
-        var coffees = coffeeService.getAllCoffees();
+        var coffees = coffeeService.getAllCoffeesById(orderRequestDTO.getCoffeesId());
         System.out.println(coffees);
         CustomerOrder order = CustomerOrder.builder()
                 .coffees(coffees)

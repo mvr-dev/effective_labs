@@ -35,14 +35,8 @@ public class Coffee {
     @EqualsAndHashCode.Exclude
     private Set<Ingredient> ingredients;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinTable(name = "coffee_order",
-            joinColumns = @JoinColumn(name = "coffee_id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id"))
     @JsonIgnore
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    @ManyToMany(mappedBy = "coffees")
     private Set<CustomerOrder> customerOrders;
 
     @NonNull

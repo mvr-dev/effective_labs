@@ -28,6 +28,11 @@ public class CoffeeService implements ICoffeeService {
         return repository.findAll();
     }
 
+    @Transactional
+    public List<Coffee> getAllCoffeesById(Iterable<Long> id){
+        return repository.findAllById(id);
+    }
+
     @Override
     @Transactional
     public Coffee getCoffeeById(Long id) {
