@@ -9,46 +9,34 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
-import java.util.Set;
 
-@Data
 @Entity
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Coffee {
+public class Promotion {
     @Id
     @GeneratedValue
     private Long id;
 
     @NonNull
-    @NotEmpty
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinTable(name = "coffee_ingredient",
-            joinColumns = @JoinColumn(name = "coffee_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+    @JoinTable(name = "coffee_promotion",
+            joinColumns = @JoinColumn(name = "promotion_id"),
+            inverseJoinColumns = @JoinColumn(name = "coffee_id"))
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Ingredient> ingredients;
-
-    @JsonIgnore
-    @ManyToMany(mappedBy = "coffees")
-    private Set<CustomerOrder> customerOrders;
-
-    @JsonIgnore
-    @ManyToMany(mappedBy = "promotedCoffees")
-    private Set<Promotion> promotions;
+    private List<Coffee> promotedCoffees;
 
     @NonNull
     @Min(0)
-    private Double price;
+    private Double promotionPrice;
 
-    @NonNull
-    @Min(0)
-    private Double costPrice;
+
 
 }
