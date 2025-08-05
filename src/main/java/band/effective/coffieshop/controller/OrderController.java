@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -52,6 +53,7 @@ public class OrderController {
                 .price(coffeeService.getAllById(orderRequestDTO.getCoffeesId())
                         .stream().mapToDouble(Coffee::getPrice).sum())
                 .status(OrderStatus.COOKING)
+                .orderTime(LocalDateTime.now())
                 .build();
                 if (orderRequestDTO.getCustomerId()!=null){
                     order.setCustomer(customerService.getCustomerById(orderRequestDTO.getCustomerId()));

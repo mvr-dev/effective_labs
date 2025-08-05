@@ -3,10 +3,12 @@ package band.effective.coffieshop.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -39,5 +41,9 @@ public class CustomerOrder {
     private List<Coffee> coffees;
 
     private OrderStatus status;
+    @NonNull
+    @Min(0)
     private Double price;
+
+    private LocalDateTime orderTime;
 }
