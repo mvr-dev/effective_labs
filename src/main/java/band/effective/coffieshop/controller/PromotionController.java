@@ -1,5 +1,6 @@
 package band.effective.coffieshop.controller;
 
+import band.effective.coffieshop.model.CustomerOrder;
 import band.effective.coffieshop.model.Promotion;
 import band.effective.coffieshop.model.dto.PromotionRequestDTO;
 import band.effective.coffieshop.model.dto.PromotionResponseDTO;
@@ -37,6 +38,7 @@ public class PromotionController {
                 .name(promotionRequestDTO.getName())
                 .promotionPrice(promotionRequestDTO.getPromotionPrice())
                 .promotedCoffees(coffeeService.getAllCoffeesById(promotionRequestDTO.getCoffeesId()))
+                .available(true)
                 .build();
         service.addPromotion(promotion);
         return PromotionResponseDTO.fromEntry(promotion);
@@ -61,9 +63,9 @@ public class PromotionController {
     @DeleteMapping("/{id}")
     public void deletePromotion(@PathVariable Long id) {
         var promotion = service.getPromotionById(id);
-        if (promotion!=null)
-            service.deletePromotion(promotion);
-
+        if (promotion!=null) {
+            promotion.setAvailable(false);
+        }
     }
 
 }

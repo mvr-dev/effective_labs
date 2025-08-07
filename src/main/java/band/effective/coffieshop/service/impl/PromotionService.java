@@ -21,6 +21,9 @@ public class PromotionService implements IPromotionService {
     public Promotion getPromotionById(Long id) {
         return repository.findById(id).orElse(null);
     }
+    public List<Promotion> getAllPromotionsById(Iterable<Long> id){
+        return repository.findAllById(id);
+    }
 
     @Override
     public Promotion updatePromotion(Promotion promotion) {

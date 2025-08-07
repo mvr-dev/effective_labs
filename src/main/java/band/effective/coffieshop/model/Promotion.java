@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -36,6 +37,11 @@ public class Promotion {
     @NonNull
     @Min(0)
     private Double promotionPrice;
+
+    @ManyToMany(mappedBy = "promotions")
+    private Set<CustomerOrder> orders;
+    @NonNull
+    private boolean available;
 
 
 

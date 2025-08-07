@@ -18,13 +18,17 @@ public class PromotionResponseDTO {
     private List<CoffeeResponseDTO> coffees;
     private Double price;
     private Double promotion_price;
+    private String name;
+    private boolean available;
 
     public static PromotionResponseDTO fromEntry(Promotion promotion){
         return PromotionResponseDTO.builder()
                 .id(promotion.getId())
+                .name(promotion.getName())
                 .promotion_price(promotion.getPromotionPrice())
                 .coffees(promotion.getPromotedCoffees().stream().map(CoffeeResponseDTO::fromEntry).toList())
                 .price(promotion.getPromotedCoffees().stream().mapToDouble(Coffee::getPrice).sum())
+                .available(promotion.isAvailable())
                 .build();
     }
 }

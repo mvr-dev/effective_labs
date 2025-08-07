@@ -44,6 +44,14 @@ public class CustomerOrder {
     @NonNull
     @Min(0)
     private Double price;
-
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinTable(name = "order_promotion",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "promotion_id"))
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Promotion> promotions;
     private LocalDateTime orderTime;
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 public class PromotionRequestDTO {
     private String name;
-    @JsonAlias({"coffees_id","coffeesID"})
+    @JsonAlias({"coffees_id","coffeesID","coffee_id","coffeeId"})
     private List<Long> coffeesId;
     @JsonAlias({"promotion_price","price"})
     private Double promotionPrice;

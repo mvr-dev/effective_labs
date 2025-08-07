@@ -3,21 +3,21 @@ package band.effective.coffieshop.controller;
 import band.effective.coffieshop.model.Coffee;
 import band.effective.coffieshop.model.CustomerOrder;
 import band.effective.coffieshop.model.OrderStatus;
+import band.effective.coffieshop.model.Promotion;
 import band.effective.coffieshop.model.dto.CoffeeResponseDTO;
 import band.effective.coffieshop.model.dto.OrderRequestDTO;
 import band.effective.coffieshop.model.dto.OrderResponseDTO;
 import band.effective.coffieshop.repository.BaristaRepository;
-import band.effective.coffieshop.service.impl.BaristaService;
-import band.effective.coffieshop.service.impl.CoffeeService;
-import band.effective.coffieshop.service.impl.CustomerService;
-import band.effective.coffieshop.service.impl.OrderService;
+import band.effective.coffieshop.service.impl.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/orders")
@@ -30,6 +30,8 @@ public class OrderController {
     private final CustomerService customerService;
 
     private final CoffeeService coffeeService;
+
+    private final PromotionService promotionService;
 
     @GetMapping
     public List<OrderResponseDTO> getOrders(){
@@ -45,12 +47,18 @@ public class OrderController {
     @PostMapping
     public OrderResponseDTO postOrder(@RequestBody OrderRequestDTO orderRequestDTO){
         System.out.println(orderRequestDTO);
-        var coffees = coffeeService.getAllCoffeesById(orderRequestDTO.getCoffeesId());
+        Optional<List<Coffee>> coffees;
+        if(orderRequestDTO.getCoffeesId()==null){
+            coffees=Optional.empty();
+        }
+        else{
+            coffees = Optional.ofNullable(coffeeService.getAllCoffeesById(orderRequestDTO.getCoffeesId()));
+        }
         System.out.println(coffees);
         CustomerOrder order = CustomerOrder.builder()
-                .coffees(coffees)
+                .coffees(coffees.orElse(new ArrayList<>()))
                 .barista(baristaService.getBaristaById(orderRequestDTO.getBaristaId()))
-                .price(coffeeService.getAllById(orderRequestDTO.getCoffeesId())
+                .price(coffees.orElse(List.of(Coffee.builder().price(0.).costPrice(0.).name("empty").build()))
                         .stream().mapToDouble(Coffee::getPrice).sum())
                 .status(OrderStatus.COOKING)
                 .orderTime(LocalDateTime.now())
@@ -61,6 +69,11 @@ public class OrderController {
                 }
                 else
                     order.setCustomer(null);
+                if (orderRequestDTO.getPromotions()!=null){
+                    order.setPromotions(promotionService
+                            .getAllPromotionsById(orderRequestDTO.getPromotions())
+                            .stream().filter(Promotion::isAvailable).toList());
+                }
         System.out.println(order);
         service.addOrder(order);
         return OrderResponseDTO.fromEntry(order);
