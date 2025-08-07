@@ -1,6 +1,8 @@
 package band.effective.coffieshop.model;
 
 import band.effective.coffieshop.repository.IngredientRepository;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -26,8 +28,16 @@ public class Ingredient {
     @NonNull
     @Min(value = 0)
     private Double quantity;
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "ingredients",cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "ingredients")
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Coffee> coffeesWith;
+
+    @NonNull
+    @Min(0)
+    @JsonAlias({"price_per_one", "cost_per_one"})
+    private Double costPerOne;
 
 
 }
