@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-//b
+
 @Data
 @Builder
 @Entity
