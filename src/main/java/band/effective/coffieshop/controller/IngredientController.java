@@ -1,6 +1,8 @@
 package band.effective.coffieshop.controller;
 
+import band.effective.coffieshop.model.Coffee;
 import band.effective.coffieshop.model.Ingredient;
+import band.effective.coffieshop.model.dto.IngredientResponseDTO;
 import band.effective.coffieshop.service.IIngredientService;
 import band.effective.coffieshop.service.impl.IngredientService;
 import jakarta.validation.Valid;
@@ -8,7 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//strange work
+import java.util.stream.Collectors;
+
+
 @RestController
 @RequestMapping("/ingredients")
 @AllArgsConstructor
@@ -16,16 +20,29 @@ public class IngredientController {
     private final IngredientService service;
 
     @GetMapping
-    public List<Ingredient> getAllIngredients(){
-        return service.getAllIngredients();
+    public List<IngredientResponseDTO> getAllIngredients(){
+        var ingredients = service.getAllIngredients();
+        return ingredients.stream()
+                .map(ingredient -> IngredientResponseDTO.builder()
+                        .id(ingredient.getId())
+                        .name(ingredient.getName())
+                        .quantity(ingredient.getQuantity())
+                        .coffees_with(ingredient.getCoffeesWith().stream().map(Coffee::getName).toList())
+                        .build()).toList();
     }
     @GetMapping("/stock")
     public List<Ingredient> getAllIngredientsInStock(){
         return service.getAllIngredientsInStock();
     }
     @GetMapping("/{id}")
-    public Ingredient getIngredientById(@PathVariable Long id){
-        return service.getIngredientById(id);
+    public IngredientResponseDTO getIngredientById(@PathVariable Long id){
+        var ingredient = service.getIngredientById(id);
+        return IngredientResponseDTO.builder()
+                .id(id)
+                .name(ingredient.getName())
+                .quantity(ingredient.getQuantity())
+                .coffees_with(ingredient.getCoffeesWith().stream().map(Coffee::getName).toList())
+                .build();
     }
 
     @PostMapping
@@ -40,7 +57,12 @@ public class IngredientController {
     }
     @DeleteMapping("/{id}")
     public void deleteIngredient(@PathVariable Long id){
-        service.deleteIngredient(service.getIngredientById(id));
+        var ingredient = service.getIngredientById(id);
+        for (Coffee coffee : ingredient.getCoffeesWith()){
+            coffee.getIngredients().remove(ingredient);
+        }
+        ingredient.getCoffeesWith().clear();
+        service.deleteIngredient(ingredient);
     }
 
 

@@ -2,6 +2,7 @@ package band.effective.coffieshop.service;
 
 import band.effective.coffieshop.model.Customer;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ICustomerService {
@@ -9,7 +10,6 @@ public interface ICustomerService {
     List<Customer> getAllCustomers();
 
     Customer getCustomerById(Long id) ;
-
 
     Customer updateCustomer(Customer Customer);
 

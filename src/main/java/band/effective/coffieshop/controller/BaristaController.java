@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//no problems
+
 @RestController
 @RequestMapping("/baristas")
 @AllArgsConstructor
@@ -25,7 +25,6 @@ public class BaristaController {
         return service.addBarista(barista);
     }
     @PutMapping("/{id}")
-    //TODO
     public  Barista updateBarista(@PathVariable Long id, @RequestBody Barista barista){
         barista.setId(id);
         return service.updateBarista(barista);
