@@ -15,3 +15,17 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    password: xhdhdks
+#    my own mail
+    username: vrmarkov05@gmail.com
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  weather:
+    api-key: ${SPRING_WEATHER_API_KEY}

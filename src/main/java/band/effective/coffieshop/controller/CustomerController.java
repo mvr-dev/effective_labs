@@ -1,6 +1,7 @@
 package band.effective.coffieshop.controller;
 
 import band.effective.coffieshop.model.Customer;
+import band.effective.coffieshop.service.IEmailService;
 import band.effective.coffieshop.service.impl.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomerController {
     private final CustomerService service;
+    private final IEmailService emailService;
     @GetMapping
     public List<Customer> getAllCustomers(){
         return service.getAllCustomers();
@@ -21,8 +23,13 @@ public class CustomerController {
         return service.getCustomerById(id);
     }
     @PostMapping
-    public Customer addCustomer(@RequestBody Customer Customer){
-        return service.addCustomer(Customer);
+    public Customer addCustomer(@RequestBody Customer customer){
+
+        emailService.sendMessage(customer.getEmail(),"Hello from effective coffeeshop",
+                String.format("Hello, dear %s!\nWe are glad to see you at our coffeeshop!",customer.getName()));
+        customer.setWeaklyPoints(0);
+        customer.setPoints(0);
+        return service.addCustomer(customer);
     }
     @PutMapping("/{id}")
     public  Customer updateCustomer(@PathVariable Long id, @RequestBody Customer Customer){

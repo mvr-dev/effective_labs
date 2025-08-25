@@ -1,29 +1,23 @@
 package band.effective.coffieshop.controller;
 
 import band.effective.coffieshop.model.Customer;
-import band.effective.coffieshop.model.NotificationService;
 import band.effective.coffieshop.model.dto.NotificationDTO;
 import band.effective.coffieshop.model.weatherResponse.WeatherResponse;
 import band.effective.coffieshop.service.IEmailService;
 import band.effective.coffieshop.service.impl.CustomerService;
+import band.effective.coffieshop.service.impl.WeatherService;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.Notification;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/notification")
 @AllArgsConstructor
 public class NotificationController {
-    private NotificationService service;
+    private WeatherService weatherService;
     private IEmailService emailService;
 
     private final CustomerService customerService;
@@ -42,27 +36,16 @@ public class NotificationController {
             Map.entry(12, Map.of("max", 20,  "min", -20))  // Декабрь
     );
 
-
-    @GetMapping
-    public List<WeatherResponse> responses(){
-        return List.of(service.getWeather());
-    }
-    @GetMapping("/hello/{id}")
-    public void sendHelloTo(@PathVariable Long id){
-        Customer customer = customerService.getCustomerById(id);
-        emailService.sendMessage(customer.getEmail(),"Hello from effective coffeeshop",
-                String.format("Hello, dear %s!\nWe are glad to see you at our coffeeshop!",customer.getName()));
-    }
     @GetMapping("/toGroup")
     public void sendToGroup(@RequestBody NotificationDTO notificationDTO){
         notificationDTO.getId()
                 .forEach(id->emailService.sendMessage(customerService.getCustomerById(id).getEmail(),
                         notificationDTO.getSubject(), notificationDTO.getMessage()));
     }
-    @Scheduled(cron = "0 0 12 * * *")
+    @Scheduled(cron = "0 0 9 * * *")
     public void sendWeather(){
         System.out.println("send");
-        var weather = service.getWeather();
+        var weather = weatherService.getWeather();
         if (weather.getMain().getTempMax()>MONTH_STATS.get(LocalDate.now().getMonthValue()).get("max")){
             customerService.getAllCustomers()
                     .forEach(customer-> emailService.sendMessage(
@@ -89,6 +72,36 @@ public class NotificationController {
                                         String.format("%s, Effective coffee shop поздравляет вас с днем рождения!\uD83C\uDF89",
                                         customer.getName()))
         );
+    }
 
+    @Scheduled(cron = "@weekly")
+    public void sendPoints(){
+        customerService.getAllCustomers().stream()
+                .filter(customer -> customer.getLastOrder()!=null &&
+                        customer.getLastOrder().isAfter(LocalDate.now().minusDays(7)))
+                .forEach(customer -> {emailService.sendMessage(
+                        customer.getEmail(),
+                        "Баллы за неделю\uD83E\uDE99"
+                        ,String.format(
+                        "%s, за неделю вы накопили %f баллов\uD83E\uDD11\nЭто повод зайти и выпить кофе в effective coffee shop☕",
+                                customer.getName(), customer.getWeaklyPoints()
+                        )
+                );
+                    customer.setWeaklyPoints(0);
+                });
+    }
+    @Scheduled(cron = "@weekly")
+    public void sendWeaklyEmpty(){
+        customerService.getAllCustomers().stream()
+                .filter(customer ->
+                        customer.getLastOrder().isBefore(LocalDate.now().minusDays(7)))
+                .forEach(customer -> emailService.sendMessage(
+                        customer.getEmail(),
+                        "Effective coffee shop скучает без вас"
+                        ,String.format(
+                                "%s, вас не было уже неделю в нашей кофейне\uD83D\uDE22\nЭто повод зайти и выпить кофе в effective coffee shop☕",
+                                customer.getName()
+                        )
+                ));
     }
 }

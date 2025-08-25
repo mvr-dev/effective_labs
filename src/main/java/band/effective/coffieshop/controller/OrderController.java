@@ -1,9 +1,6 @@
 package band.effective.coffieshop.controller;
 
-import band.effective.coffieshop.model.Coffee;
-import band.effective.coffieshop.model.CustomerOrder;
-import band.effective.coffieshop.model.OrderStatus;
-import band.effective.coffieshop.model.Promotion;
+import band.effective.coffieshop.model.*;
 import band.effective.coffieshop.model.dto.CoffeeResponseDTO;
 import band.effective.coffieshop.model.dto.OrderRequestDTO;
 import band.effective.coffieshop.model.dto.OrderResponseDTO;
@@ -64,8 +61,8 @@ public class OrderController {
                 .orderTime(LocalDateTime.now())
                 .build();
                 if (orderRequestDTO.getCustomerId()!=null){
-                    order.setCustomer(customerService.getCustomerById(orderRequestDTO.getCustomerId()));
-//                    customerService.getCustomerById(orderRequestDTO.getCustomerId())
+                    Customer customer = customerService.getCustomerById(orderRequestDTO.getCustomerId());
+                    order.setCustomer(customer);
                 }
                 else
                     order.setCustomer(null);
@@ -94,8 +91,16 @@ public class OrderController {
             order.setBarista(baristaService.getBaristaById(requestDTO.getBaristaId()));
         }
         if(requestDTO.getStatus()!=null){
-            if(requestDTO.getStatus()>=0 && requestDTO.getStatus()<=2){
-                order.setStatus(OrderStatus.values()[requestDTO.getStatus()]);
+            if(requestDTO.getStatus()==1){
+                order.setStatus(OrderStatus.READY);
+                Customer customer = order.getCustomer();
+                if(customer!=null){
+                    customer.setLastOrder(order.getOrderTime().toLocalDate());
+                    customer.setPoints(customer.getPoints()+order.getPrice()*0.03);
+                }
+            }
+            else if(requestDTO.getStatus()==2){
+                order.setStatus(OrderStatus.CANCELED);
             }
             else
                 throw new IllegalArgumentException();

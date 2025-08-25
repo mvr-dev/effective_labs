@@ -2,18 +2,21 @@ package band.effective.coffieshop.service.impl;
 
 import band.effective.coffieshop.model.Coffee;
 import band.effective.coffieshop.model.Ingredient;
+import band.effective.coffieshop.model.weatherResponse.WeatherResponse;
 import band.effective.coffieshop.repository.CoffeeRepository;
 import band.effective.coffieshop.repository.IngredientRepository;
 import band.effective.coffieshop.service.ICoffeeService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -74,4 +77,5 @@ public class CoffeeService implements ICoffeeService {
     public List<Coffee> getAllById(Iterable<Long> ids){
         return repository.findAllById(ids);
     }
+
 }
