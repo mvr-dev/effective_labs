@@ -37,6 +37,11 @@ public class IngredientService implements IIngredientService {
     }
 
     @Override
+    public List<Ingredient> findAllById(List<Long> id) {
+        return repository.findAllById(id);
+    }
+
+    @Override
     public Ingredient updateIngredient(Ingredient ingredient) {
         return repository.save(ingredient);
     }

@@ -1,18 +1,20 @@
 package band.effective.coffeeshop.controller;
 
 import band.effective.coffeeshop.model.Customer;
+import band.effective.coffeeshop.service.ICustomerService;
 import band.effective.coffeeshop.service.IEmailService;
 import band.effective.coffeeshop.service.impl.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/customers")
 @AllArgsConstructor
 public class CustomerController {
-    private final CustomerService service;
+    private final ICustomerService service;
     private final IEmailService emailService;
     @GetMapping
     public List<Customer> getAllCustomers(){
@@ -27,8 +29,8 @@ public class CustomerController {
 
         emailService.sendMessage(customer.getEmail(),"Hello from effective coffeeshop",
                 String.format("Hello, dear %s!\nWe are glad to see you at our coffeeshop!",customer.getName()));
-        customer.setWeaklyPoints(0);
-        customer.setPoints(0);
+        customer.setWeaklyPoints(BigDecimal.valueOf(0));
+        customer.setPoints(BigDecimal.valueOf(0));
         return service.addCustomer(customer);
     }
     @PutMapping("/{id}")

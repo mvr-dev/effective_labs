@@ -3,6 +3,7 @@ package band.effective.coffeeshop.service;
 import band.effective.coffeeshop.model.Promotion;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 @Service
 public interface IPromotionService {
@@ -11,4 +12,6 @@ public interface IPromotionService {
     Promotion updatePromotion(Promotion promotion);
     Promotion addPromotion(Promotion promotion);
     void deletePromotion(Promotion promotion);
+
+    List<Promotion> getAllPromotionsById(List<Long> promotions);
 }

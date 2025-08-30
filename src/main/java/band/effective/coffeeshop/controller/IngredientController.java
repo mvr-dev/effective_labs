@@ -3,6 +3,7 @@ package band.effective.coffeeshop.controller;
 import band.effective.coffeeshop.model.Coffee;
 import band.effective.coffeeshop.model.Ingredient;
 import band.effective.coffeeshop.model.dto.IngredientResponseDTO;
+import band.effective.coffeeshop.service.IIngredientService;
 import band.effective.coffeeshop.service.impl.IngredientService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 @RequestMapping("/ingredients")
 @AllArgsConstructor
 public class IngredientController {
-    private final IngredientService service;
+    private final IIngredientService service;
 
     @GetMapping
     public List<IngredientResponseDTO> getAllIngredients(){

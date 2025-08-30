@@ -1,6 +1,7 @@
 package band.effective.coffeeshop.controller;
 
 import band.effective.coffeeshop.model.Barista;
+import band.effective.coffeeshop.service.IBaristaService;
 import band.effective.coffeeshop.service.impl.BaristaService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping("/baristas")
 @AllArgsConstructor
 public class BaristaController {
-    private final BaristaService service;
+    private final IBaristaService service;
     @GetMapping
     public List<Barista> getAllBaristas(){
         return service.getAllBaristas();

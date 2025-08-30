@@ -13,4 +13,7 @@ public interface ICoffeeService {
     Coffee updateCoffee(Coffee coffee);
     void deleteCoffee(Long id);
     Set<Ingredient> getCoffeeIngredients(Long id);
+
+    List<Coffee> getAllCoffeesById(List<Long> coffeesId);
+
 }

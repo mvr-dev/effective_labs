@@ -1,6 +1,7 @@
 package band.effective.coffeeshop.controller;
 
 import band.effective.coffeeshop.model.dto.NotificationDTO;
+import band.effective.coffeeshop.service.ICustomerService;
 import band.effective.coffeeshop.service.IEmailService;
 import band.effective.coffeeshop.service.impl.CustomerService;
 import band.effective.coffeeshop.service.impl.WeatherService;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -18,7 +20,7 @@ public class NotificationController {
     private WeatherService weatherService;
     private IEmailService emailService;
 
-    private final CustomerService customerService;
+    private final ICustomerService customerService;
     public static final Map<Integer, Map<String, Integer>> MONTH_STATS = Map.ofEntries(
             Map.entry(1,  Map.of("max", 20, "min", -20)), // Январь
             Map.entry(2,  Map.of("max", 20,  "min", -20)), // Февраль
@@ -85,7 +87,7 @@ public class NotificationController {
                                 customer.getName(), customer.getWeaklyPoints()
                         )
                 );
-                    customer.setWeaklyPoints(0);
+                    customer.setWeaklyPoints(BigDecimal.valueOf(0));
                 });
     }
     @Scheduled(cron = "@weekly")
