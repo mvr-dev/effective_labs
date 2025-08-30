@@ -50,7 +50,7 @@ public class CoffeeController {
         return service.updateCoffee(coffee1);
     }
     @PostMapping
-    public Coffee putCoffee(@RequestBody CoffeeRequestDTO coffee){
+    public Coffee postCoffee(@RequestBody CoffeeRequestDTO coffee){
         Set<Ingredient> ingredients = new HashSet<>(ingredientRepository.findAllById(coffee.getIngredients()));
         System.out.println(ingredients);
         Coffee coffee1 = Coffee.builder()
