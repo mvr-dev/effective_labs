@@ -10,7 +10,7 @@ import org.springframework.web.client.RestClient;
 @Service
 @RequiredArgsConstructor
 public class WeatherService {
-    @Value("${spring.weather.api-key}")
+    @Value("${WEATHER_API_KEY}")
     private String API_KEY;
     private final String CITY = "Omsk";
     private final String URL = String.format("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric&lang=ru&cnt=8",CITY,API_KEY);

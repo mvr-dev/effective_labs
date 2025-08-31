@@ -69,6 +69,12 @@ public class CoffeeService implements ICoffeeService {
 
     }
 
+    @Override
+    public List<Coffee> getAllCoffeesById(List<Long> coffeesId) {
+        return repository.findAllById(coffeesId);
+    }
+
+
     public List<Coffee> getAllById(Iterable<Long> ids){
         return repository.findAllById(ids);
     }

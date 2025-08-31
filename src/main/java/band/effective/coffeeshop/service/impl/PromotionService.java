@@ -39,4 +39,9 @@ public class PromotionService implements IPromotionService {
     public void deletePromotion(Promotion promotion) {
         repository.delete(promotion);
     }
+
+    @Override
+    public List<Promotion> getAllPromotionsById(List<Long> promotions) {
+        return repository.findAllById(promotions);
+    }
 }

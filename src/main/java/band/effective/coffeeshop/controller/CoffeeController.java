@@ -4,7 +4,7 @@ import band.effective.coffeeshop.model.Coffee;
 import band.effective.coffeeshop.model.Ingredient;
 import band.effective.coffeeshop.model.dto.CoffeeRequestDTO;
 import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
-import band.effective.coffeeshop.repository.IngredientRepository;
+import band.effective.coffeeshop.service.IIngredientService;
 import band.effective.coffeeshop.service.impl.CoffeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ import java.util.Set;
 public class CoffeeController {
     private final CoffeeService service;
 
-    private final IngredientRepository ingredientRepository;
+    private final IIngredientService ingredientService;
 
     @GetMapping
     public List<CoffeeResponseDTO> getAllCoffees(){
@@ -38,7 +38,7 @@ public class CoffeeController {
 
     @PutMapping("/{id}")
     public Coffee updateCoffeeById(@PathVariable Long id,@RequestBody CoffeeRequestDTO coffee){
-        Set<Ingredient> ingredients = new HashSet<>(ingredientRepository.findAllById(coffee.getIngredients()));
+        Set<Ingredient> ingredients = new HashSet<>(ingredientService.findAllById(coffee.getIngredients()));
         Coffee coffee1 = Coffee.builder()
                 .id(id)
                 .name(coffee.getName())
@@ -50,8 +50,8 @@ public class CoffeeController {
         return service.updateCoffee(coffee1);
     }
     @PostMapping
-    public Coffee putCoffee(@RequestBody CoffeeRequestDTO coffee){
-        Set<Ingredient> ingredients = new HashSet<>(ingredientRepository.findAllById(coffee.getIngredients()));
+    public Coffee postCoffee(@RequestBody CoffeeRequestDTO coffee){
+        Set<Ingredient> ingredients = new HashSet<>(ingredientService.findAllById(coffee.getIngredients()));
         System.out.println(ingredients);
         Coffee coffee1 = Coffee.builder()
                 .name(coffee.getName())

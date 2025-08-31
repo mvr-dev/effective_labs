@@ -3,10 +3,12 @@ package band.effective.coffeeshop.controller;
 import band.effective.coffeeshop.model.*;
 import band.effective.coffeeshop.model.dto.OrderRequestDTO;
 import band.effective.coffeeshop.model.dto.OrderResponseDTO;
+import band.effective.coffeeshop.service.*;
 import band.effective.coffeeshop.service.impl.*;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +18,15 @@ import java.util.Optional;
 @RequestMapping("/orders")
 @AllArgsConstructor
 public class OrderController {
-    private final OrderService service;
+    private final IOrderService service;
 
-    private final BaristaService baristaService;
+    private final IBaristaService baristaService;
 
-    private final CustomerService customerService;
+    private final ICustomerService customerService;
 
-    private final CoffeeService coffeeService;
+    private final ICoffeeService coffeeService;
 
-    private final PromotionService promotionService;
+    private final IPromotionService promotionService;
 
     @GetMapping
     public List<OrderResponseDTO> getOrders(){
@@ -51,8 +53,8 @@ public class OrderController {
         CustomerOrder order = CustomerOrder.builder()
                 .coffees(coffees.orElse(new ArrayList<>()))
                 .barista(baristaService.getBaristaById(orderRequestDTO.getBaristaId()))
-                .price(coffees.orElse(List.of(Coffee.builder().price(0.).costPrice(0.).name("empty").build()))
-                        .stream().mapToDouble(Coffee::getPrice).sum())
+                .price(BigDecimal.valueOf(coffees.orElse(List.of(Coffee.builder().price(0.).costPrice(0.).name("empty").build()))
+                        .stream().mapToDouble(Coffee::getPrice).sum()))
                 .status(OrderStatus.COOKING)
                 .orderTime(LocalDateTime.now())
                 .build();
@@ -92,7 +94,7 @@ public class OrderController {
                 Customer customer = order.getCustomer();
                 if(customer!=null){
                     customer.setLastOrder(order.getOrderTime().toLocalDate());
-                    customer.setPoints(customer.getPoints()+order.getPrice()*0.03);
+                    customer.setPoints(customer.getPoints().add(order.getPrice().multiply(BigDecimal.valueOf(0.03))));
                 }
             }
             else if(requestDTO.getStatus()==2){
@@ -102,7 +104,7 @@ public class OrderController {
                 throw new IllegalArgumentException();
         }
         if(requestDTO.getCoffeesId()!=null){
-            order.setCoffees(coffeeService.getAllById(requestDTO.getCoffeesId()));
+            order.setCoffees(coffeeService.getAllCoffeesById(requestDTO.getCoffeesId()));
         }
         System.out.println(order);
         service.updateOrder(order);

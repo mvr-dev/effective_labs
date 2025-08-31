@@ -14,6 +14,8 @@ public interface IIngredientService {
     Ingredient getIngredientById(Long id);
     Ingredient getIngredientByName(String name);
 
+    List<Ingredient> findAllById(List<Long> id);
+
 
     Ingredient updateIngredient(Ingredient ingredient);
 
