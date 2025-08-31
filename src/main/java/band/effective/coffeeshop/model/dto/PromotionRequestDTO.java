@@ -1,11 +1,11 @@
 package band.effective.coffeeshop.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -13,9 +13,16 @@ import java.util.List;
 @Data
 @Builder
 public class PromotionRequestDTO {
+    @NonNull
+    @NotEmpty
     private String name;
     @JsonAlias({"coffees_id","coffeesID","coffee_id","coffeeId"})
+    @NonNull
+    @NotEmpty
     private List<Long> coffeesId;
     @JsonAlias({"promotion_price","price"})
-    private Double promotionPrice;
+    @NonNull
+    @NotEmpty
+    @Min(0)
+    private BigDecimal promotionPrice;
 }

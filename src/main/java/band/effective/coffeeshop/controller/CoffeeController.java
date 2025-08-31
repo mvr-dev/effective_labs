@@ -4,6 +4,7 @@ import band.effective.coffeeshop.model.Coffee;
 import band.effective.coffeeshop.model.Ingredient;
 import band.effective.coffeeshop.model.dto.CoffeeRequestDTO;
 import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
+import band.effective.coffeeshop.service.ICoffeeService;
 import band.effective.coffeeshop.service.IIngredientService;
 import band.effective.coffeeshop.service.impl.CoffeeService;
 import lombok.AllArgsConstructor;
@@ -19,20 +20,18 @@ import java.util.Set;
 @RequestMapping("/coffees")
 @AllArgsConstructor
 public class CoffeeController {
-    private final CoffeeService service;
+    private final ICoffeeService service;
 
     private final IIngredientService ingredientService;
 
     @GetMapping
     public List<CoffeeResponseDTO> getAllCoffees(){
         var coffees = service.getAllCoffees();
-        return coffees.stream().peek(System.out::println).map(CoffeeResponseDTO::fromEntry).toList();
+        return coffees.stream().map(CoffeeResponseDTO::fromEntry).toList();
     }
     @GetMapping("/{id}")
     public CoffeeResponseDTO getCoffeeById(@PathVariable Long id){
-        System.out.println("get coffee "+id);
         var coffee = service.getCoffeeById(id);
-        System.out.println(coffee);
         return CoffeeResponseDTO.fromEntry(coffee);
     }
 
@@ -45,8 +44,6 @@ public class CoffeeController {
                 .ingredients(ingredients)
                 .costPrice(ingredients.stream().mapToDouble(Ingredient::getCostPerOne).sum())
                 .build();
-        System.out.println(coffee);
-        System.out.println(coffee1);
         return service.updateCoffee(coffee1);
     }
     @PostMapping

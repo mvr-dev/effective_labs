@@ -1,9 +1,11 @@
 package band.effective.coffeeshop.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @NoArgsConstructor
@@ -11,7 +13,15 @@ import java.util.List;
 @Data
 @Builder
 public class CoffeeRequestDTO {
+    @NotEmpty
+    @NonNull
     private String name;
+    @NotEmpty
+    @NonNull
     private List<Long> ingredients;
-    private Double price;
+    @NotEmpty
+    @NonNull
+    @Positive
+    @Min(0)
+    private BigDecimal price;
 }
