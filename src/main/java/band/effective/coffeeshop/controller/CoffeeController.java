@@ -7,6 +7,7 @@ import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
 import band.effective.coffeeshop.service.ICoffeeService;
 import band.effective.coffeeshop.service.IIngredientService;
 import band.effective.coffeeshop.service.impl.CoffeeService;
+import band.effective.coffeeshop.service.mapper.CoffeeMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +25,16 @@ import java.util.Set;
 @AllArgsConstructor
 public class CoffeeController {
     private final ICoffeeService service;
+    private final CoffeeMapper mapper;
 
     @GetMapping
     public List<CoffeeResponseDTO> getAllCoffees(){
-        return service.getAllCoffees();
+        return service.getAllCoffees().stream().map(mapper::fromEntry).toList();
     }
     @GetMapping("/{id}")
     public CoffeeResponseDTO getCoffeeById(@PathVariable Long id){
         var coffee = service.getCoffeeById(id);
-        return coffee.orElseThrow(()->
+        return coffee.map(mapper::fromEntry).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Incorrect id")
         );
     }

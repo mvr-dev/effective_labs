@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,5 +18,5 @@ public class PromotionRequestDTO {
     @JsonAlias({"coffees_id","coffeesID","coffee_id","coffeeId"})
     private List<Long> coffeesId;
     @JsonAlias({"promotion_price","price"})
-    private Double promotionPrice;
+    private BigDecimal promotionPrice;
 }
