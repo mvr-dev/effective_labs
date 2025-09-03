@@ -1,16 +1,24 @@
-package band.effective.coffeeshop.service.impl;
+coffeeService
+
+        package band.effective.coffeeshop.service.impl;
 
 import band.effective.coffeeshop.model.Coffee;
 import band.effective.coffeeshop.model.Ingredient;
+import band.effective.coffeeshop.model.dto.CoffeeRequestDTO;
+import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
 import band.effective.coffeeshop.repository.CoffeeRepository;
-import band.effective.coffeeshop.repository.IngredientRepository;
 import band.effective.coffeeshop.service.ICoffeeService;
-import jakarta.persistence.EntityNotFoundException;
+import band.effective.coffeeshop.service.IIngredientService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -18,41 +26,61 @@ import java.util.Set;
 public class CoffeeService implements ICoffeeService {
     private final CoffeeRepository repository;
 
-    private final IngredientRepository ingredientRepository;
+    private final IIngredientService ingredientService;
 
     @Override
     @Transactional
-    public List<Coffee> getAllCoffees() {
-        return repository.findAll();
+    public List<CoffeeResponseDTO> getAllCoffees() {
+        return repository.findAll().stream().map(CoffeeResponseDTO::fromEntry).toList();
     }
 
     @Transactional
-    public List<Coffee> getAllCoffeesById(Iterable<Long> id){
-        return repository.findAllById(id);
-    }
-
-    @Override
-    @Transactional
-    public Coffee getCoffeeById(Long id) {
-        return repository.findByIdWithIngredients(id).orElse(null);
+    public List<CoffeeResponseDTO> getAllCoffeesById(Iterable<Long> id){
+        return repository.findAllById(id).stream()
+                .map(CoffeeResponseDTO::fromEntry).toList();
     }
 
     @Override
     @Transactional
-    public Coffee addCoffee(Coffee coffee) {
-        return repository.save(coffee);
+    public Optional<CoffeeResponseDTO> getCoffeeById(Long id) {
+        return repository.findByIdWithIngredients(id)
+                .map(CoffeeResponseDTO::fromEntry);
     }
 
     @Override
     @Transactional
-    public Coffee updateCoffee(Coffee coffee) {
-        return repository.save(coffee);
+    public Coffee addCoffee(CoffeeRequestDTO coffee) {
+        Set<Ingredient> ingredients = new HashSet<>(ingredientService.findAllById(coffee.getIngredients()));
+        System.out.println(ingredients);
+        Coffee coffee1 = Coffee.builder()
+                .name(coffee.getName())
+                .ingredients(ingredients)
+                .price(coffee.getPrice())
+                .costPrice(ingredients.stream().map(Ingredient::getCostPerOne).reduce(new BigDecimal("0.0"),BigDecimal::add))
+                .build();
+        return repository.save(coffee1);
+    }
+
+    @Override
+    @Transactional
+    public Coffee updateCoffee(Long id,CoffeeRequestDTO coffee) {
+        Set<Ingredient> ingredients = new HashSet<>(ingredientService.findAllById(coffee.getIngredients()));
+        System.out.println(ingredients);
+        Coffee coffee1 = Coffee.builder()
+                .id(id)
+                .name(coffee.getName())
+                .ingredients(ingredients)
+                .price(coffee.getPrice())
+                .costPrice(ingredients.stream().map(Ingredient::getCostPerOne).reduce(new BigDecimal("0.0"),BigDecimal::add))
+                .build();
+        return repository.save(coffee1);
     }
 
     @Override
     @Transactional
     public void deleteCoffee(Long id) {
-        Coffee coffee = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Coffee coffee = repository.findById(id).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND,"Incorrect id"));
         for(Ingredient ingredient : coffee.getIngredients()){
             ingredient.getCoffeesWith().remove(coffee);
         }
@@ -61,22 +89,8 @@ public class CoffeeService implements ICoffeeService {
     }
 
     @Override
-    @Transactional
-    public Set<Ingredient> getCoffeeIngredients(Long id) {
-//        var ingredientsIds =
-          return repository.getReferenceById(id).getIngredients();
-//        return new HashSet<>(ingredientRepository.findAllById(ingredientsIds));
-
-    }
-
-    @Override
-    public List<Coffee> getAllCoffeesById(List<Long> coffeesId) {
-        return repository.findAllById(coffeesId);
-    }
-
-
-    public List<Coffee> getAllById(Iterable<Long> ids){
-        return repository.findAllById(ids);
+    public List<CoffeeResponseDTO> getAllCoffeesById(List<Long> coffeesId) {
+        return repository.findAllById(coffeesId).stream().map(CoffeeResponseDTO::fromEntry).toList();
     }
 
 }

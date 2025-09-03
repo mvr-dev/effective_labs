@@ -1,19 +1,20 @@
 package band.effective.coffeeshop.service;
 
 import band.effective.coffeeshop.model.Coffee;
-import band.effective.coffeeshop.model.Ingredient;
+import band.effective.coffeeshop.model.dto.CoffeeRequestDTO;
+import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 public interface ICoffeeService {
-    List<Coffee> getAllCoffees();
-    Coffee getCoffeeById(Long id);
-    Coffee addCoffee(Coffee coffee);
-    Coffee updateCoffee(Coffee coffee);
-    void deleteCoffee(Long id);
-    Set<Ingredient> getCoffeeIngredients(Long id);
+    List<CoffeeResponseDTO> getAllCoffees();
+    Optional<CoffeeResponseDTO> getCoffeeById(Long id);
+    Coffee addCoffee(CoffeeRequestDTO coffee);
+    Coffee updateCoffee(Long id,CoffeeRequestDTO coffee);
 
-    List<Coffee> getAllCoffeesById(List<Long> coffeesId);
+    void deleteCoffee(Long id);
+
+    List<CoffeeResponseDTO> getAllCoffeesById(List<Long> coffeesId);
 
 }
