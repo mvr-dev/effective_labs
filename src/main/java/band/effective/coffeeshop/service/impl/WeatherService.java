@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 @RequiredArgsConstructor
@@ -13,21 +14,24 @@ public class WeatherService {
     @Value("${WEATHER_API_KEY}")
     private String API_KEY;
     private final String CITY = "Omsk";
-    private final String URL = String.format("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric&lang=ru&cnt=8",CITY,API_KEY);
 
     private final RestClient restClient = RestClient.create();
 
 
-    //    @Scheduled(fixedRate = 30_000)
-    @Cacheable
+    @Cacheable(value = "weather", key = "#city")
     public WeatherResponse getWeather(){
-        //        System.out.println(API_KEY);
+        String URL = UriComponentsBuilder.fromHttpUrl("https://api.openweathermap.org/data/2.5/weather")
+                .queryParam("q", CITY)
+                .queryParam("appid", API_KEY) // apiKey гарантированно проинициализирован!
+                .queryParam("units", "metric")
+                .queryParam("lang", "ru")
+                .toUriString();
         var response = restClient
                 .get()
                 .uri(URL)
                 .retrieve()
                 .toEntity(WeatherResponse.class);
-        //        System.out.println(response);
+        System.out.println(response.getBody());
         return response.getBody();
     }
 }
