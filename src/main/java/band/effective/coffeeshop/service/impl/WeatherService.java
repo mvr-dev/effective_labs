@@ -1,5 +1,6 @@
 package band.effective.coffeeshop.service.impl;
 
+import band.effective.coffeeshop.model.City;
 import band.effective.coffeeshop.model.weatherResponse.WeatherResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +13,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class WeatherService {
     @Value("${WEATHER_API_KEY}")
-    private String API_KEY;
-    private final String CITY = "Omsk";
+    private final String API_KEY;
+    private final City CITY = City.Omsk;
 
     private final RestClient restClient = RestClient.create();
 
@@ -22,9 +23,8 @@ public class WeatherService {
     public WeatherResponse getWeather(){
         String URL = UriComponentsBuilder.fromHttpUrl("https://api.openweathermap.org/data/2.5/weather")
                 .queryParam("q", CITY)
-                .queryParam("appid", API_KEY) // apiKey гарантированно проинициализирован!
+                .queryParam("appid", API_KEY)
                 .queryParam("units", "metric")
-                .queryParam("lang", "ru")
                 .toUriString();
         var response = restClient
                 .get()
