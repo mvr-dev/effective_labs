@@ -25,7 +25,7 @@ public class Ingredient {
     private String name;
     @NonNull
     @Min(value = 0)
-    private Double quantity;
+    private BigDecimal quantity;
     @ManyToMany(mappedBy = "ingredients")
     @JsonIgnore
     @ToString.Exclude

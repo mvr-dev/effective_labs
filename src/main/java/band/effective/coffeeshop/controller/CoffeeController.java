@@ -29,23 +29,23 @@ public class CoffeeController {
 
     @GetMapping
     public List<CoffeeResponseDTO> getAllCoffees(){
-        return service.getAllCoffees().stream().map(mapper::fromEntry).toList();
+        return service.getAllCoffees();
     }
     @GetMapping("/{id}")
     public CoffeeResponseDTO getCoffeeById(@PathVariable Long id){
         var coffee = service.getCoffeeById(id);
-        return coffee.map(mapper::fromEntry).orElseThrow(()->
+        return coffee.orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Incorrect id")
         );
     }
 
     @PutMapping("/{id}")
-    public Coffee updateCoffeeById(@PathVariable Long id,@RequestBody CoffeeRequestDTO coffee){
+    public CoffeeResponseDTO updateCoffeeById(@PathVariable Long id,@RequestBody CoffeeRequestDTO coffee){
         return service.updateCoffee(id,coffee);
     }
     @PostMapping
-    public Coffee postCoffee(@RequestBody CoffeeRequestDTO coffee){
-        return service.addCoffee(coffee);
+    public CoffeeResponseDTO postCoffee(@RequestBody CoffeeRequestDTO coffee){
+        return  service.addCoffee(coffee);
     }
     @DeleteMapping("/{id}")
     public void deleteCoffee(@PathVariable Long id){

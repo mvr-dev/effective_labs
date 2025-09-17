@@ -3,6 +3,7 @@ package band.effective.coffeeshop.service.impl;
 import band.effective.coffeeshop.model.Coffee;
 import band.effective.coffeeshop.model.Ingredient;
 import band.effective.coffeeshop.model.dto.CoffeeRequestDTO;
+import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
 import band.effective.coffeeshop.repository.CoffeeRepository;
 import band.effective.coffeeshop.service.ICoffeeService;
 import band.effective.coffeeshop.service.IIngredientService;
@@ -24,34 +25,51 @@ import java.util.Set;
 public class CoffeeService implements ICoffeeService {
     private final CoffeeRepository repository;
     private final CoffeeMapper mapper;
-
-//    private final IIngredientService ingredientService;
+    private final IIngredientService ingredientService;
 
     @Override
     @Transactional
-    public List<Coffee> getAllCoffees() {
-        return repository.findAll();
+    public List<CoffeeResponseDTO> getAllCoffees() {
+        return repository.findAll().stream().map(mapper::fromEntry).toList();
     }
 
     @Override
     @Transactional
-    public Optional<Coffee> getCoffeeById(Long id) {
-        return repository.findByIdWithIngredients(id);
+    public Optional<CoffeeResponseDTO> getCoffeeById(Long id) {
+        return repository.findByIdWithIngredients(id).map(mapper::fromEntry);
     }
 
     @Override
     @Transactional
-    public Coffee addCoffee(CoffeeRequestDTO coffee) {
+    public CoffeeResponseDTO addCoffee(CoffeeRequestDTO coffee) {
         Coffee coffee1 = mapper.toEntry(coffee);
-        return repository.save(coffee1);
+        return mapper.fromEntry(repository.save(coffee1));
     }
 
     @Override
     @Transactional
-    public Coffee updateCoffee(Long id,CoffeeRequestDTO coffee) {
-        Coffee coffee1 = mapper.toEntry(coffee);
-        coffee1.setId(id);
-        return repository.save(coffee1);
+    public CoffeeResponseDTO updateCoffee(Long id, CoffeeRequestDTO coffeeRequestDTO) {
+        Coffee existingCoffee = repository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND , "No coffee with id "+id
+                )
+        );
+
+        existingCoffee.setName(coffeeRequestDTO.getName());
+        existingCoffee.setPrice(coffeeRequestDTO.getPrice());
+
+        Set<Ingredient> newIngredients = new HashSet<>(
+                ingredientService.findAllById(coffeeRequestDTO.getIngredients())
+        );
+        existingCoffee.setIngredients(newIngredients);
+
+        BigDecimal newCostPrice = newIngredients.stream()
+                .map(Ingredient::getCostPerOne)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        existingCoffee.setCostPrice(newCostPrice);
+
+        Coffee updatedCoffee = repository.save(existingCoffee);
+        return mapper.fromEntry(updatedCoffee);
     }
 
     @Override
@@ -66,6 +84,8 @@ public class CoffeeService implements ICoffeeService {
         repository.delete(coffee);
     }
 
+    //служебный метод для других классов
+    // !! не используется в контроллере !!
     @Override
     public List<Coffee> getAllCoffeesById(List<Long> coffeesId) {
         return repository.findAllById(coffeesId);

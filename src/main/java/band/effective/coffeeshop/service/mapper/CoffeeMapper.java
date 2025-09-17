@@ -16,7 +16,7 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class CoffeeMapper {
-    IIngredientService ingredientService;
+    private IIngredientService ingredientService;
     public CoffeeResponseDTO fromEntry(Coffee coffee){
         return CoffeeResponseDTO.builder()
                 .ingredients(coffee.getIngredients().stream().map(Ingredient::getName).toList())

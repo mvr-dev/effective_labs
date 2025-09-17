@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomerController {
     private final ICustomerService service;
-    private final IEmailService emailService;
     @GetMapping
     public List<Customer> getAllCustomers(){
         return service.getAllCustomers();
@@ -26,11 +25,6 @@ public class CustomerController {
     }
     @PostMapping
     public Customer addCustomer(@RequestBody Customer customer){
-
-        emailService.sendMessage(customer.getEmail(),"Hello from effective coffeeshop",
-                String.format("Hello, dear %s!\nWe are glad to see you at our coffeeshop!",customer.getName()));
-        customer.setWeaklyPoints(BigDecimal.valueOf(0));
-        customer.setPoints(BigDecimal.valueOf(0));
         return service.addCustomer(customer);
     }
     @PutMapping("/{id}")

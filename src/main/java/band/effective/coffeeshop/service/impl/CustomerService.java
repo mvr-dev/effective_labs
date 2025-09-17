@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomerService implements ICustomerService {
     private final CustomerRepository repository;
+    private final  EmailService emailService;
     @Override
     public List<Customer> getAllCustomers() {
         return repository.findAll();
@@ -31,8 +33,12 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public Customer addCustomer(Customer Customer) {
-        return repository.save(Customer);
+    public Customer addCustomer(Customer customer) {
+        emailService.sendMessage(customer.getEmail(),"Hello from effective coffeeshop",
+                String.format("Hello, dear %s!\nWe are glad to see you at our coffeeshop!",customer.getName()));
+        customer.setWeaklyPoints(BigDecimal.ZERO);
+        customer.setPoints(BigDecimal.ZERO);
+        return repository.save(customer);
     }
 
     @Override
