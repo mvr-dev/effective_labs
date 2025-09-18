@@ -10,8 +10,6 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class IngredientMapper {
-    private ICoffeeService coffeeService;
-
     public IngredientResponseDTO fromEntry(Ingredient ingredient) {
         return IngredientResponseDTO.builder()
                 .id(ingredient.getId())
