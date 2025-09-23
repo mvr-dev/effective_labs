@@ -1,13 +1,17 @@
 package band.effective.coffeeshop.service.impl;
 
+import band.effective.coffeeshop.model.Coffee;
 import band.effective.coffeeshop.model.CustomerOrder;
+import band.effective.coffeeshop.model.Promotion;
 import band.effective.coffeeshop.model.dto.OrderRequestDTO;
 import band.effective.coffeeshop.model.dto.OrderResponseDTO;
 import band.effective.coffeeshop.repository.OrderRepository;
 import band.effective.coffeeshop.service.IOrderService;
 import band.effective.coffeeshop.service.mapper.OrderMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,10 +44,17 @@ public class OrderService implements IOrderService {
         return mapper.fromEntry(repository.save(mapper.toEntry(order)));
     }
 
-    //Возможно нужно добавить удаление полей Кофе
     @Override
     public void deleteOrder(long id) {
-        CustomerOrder order = repository.getReferenceById(id);
+        CustomerOrder order = repository.findById(id).orElseThrow(
+                ()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Incorrect id"));
+        for (Promotion promotion: order.getPromotions()){
+            promotion.getOrders().remove(order);
+        }
+        for (Coffee coffee: order.getCoffees()){
+            coffee.getCustomerOrders().remove(order);
+        }
         repository.delete(order);
+
     }
 }
