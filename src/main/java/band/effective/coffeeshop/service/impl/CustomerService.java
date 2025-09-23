@@ -31,8 +31,9 @@ public class CustomerService implements ICustomerService {
 
 
     @Override
-    public Customer updateCustomer(Customer Customer) {
-        return repository.save(Customer);
+    public Customer updateCustomer(long id,Customer customer) {
+        customer.setId(id);
+        return repository.save(customer);
     }
 
     @Override

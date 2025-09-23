@@ -11,10 +11,10 @@ public interface ICustomerService {
 
     Optional<Customer> getCustomerById(long id) ;
 
-    Customer updateCustomer(Customer Customer);
+    Customer updateCustomer(long id,Customer customer);
 
-    Customer addCustomer(Customer Customer) ;
+    Customer addCustomer(Customer customer) ;
 
 
-    public void deleteCustomer(long id);
+    void deleteCustomer(long id);
 }
