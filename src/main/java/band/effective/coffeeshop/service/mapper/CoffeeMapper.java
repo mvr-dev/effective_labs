@@ -4,6 +4,7 @@ import band.effective.coffeeshop.model.Coffee;
 import band.effective.coffeeshop.model.Ingredient;
 import band.effective.coffeeshop.model.dto.CoffeeRequestDTO;
 import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
+import band.effective.coffeeshop.repository.IngredientRepository;
 import band.effective.coffeeshop.service.IIngredientService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,8 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class CoffeeMapper {
-    private IIngredientService ingredientService;
-    public CoffeeResponseDTO fromEntry(Coffee coffee){
+    private static IngredientRepository ingredientRepository;
+    public static CoffeeResponseDTO fromEntry(Coffee coffee){
         return CoffeeResponseDTO.builder()
                 .ingredients(coffee.getIngredients().stream().map(Ingredient::getName).toList())
                 .name(coffee.getName())
@@ -26,9 +27,9 @@ public class CoffeeMapper {
                 .price(coffee.getPrice())
                 .build();
     }
-    public Coffee toEntry(CoffeeRequestDTO coffeeRequestDTO){
+    public static Coffee toEntry(CoffeeRequestDTO coffeeRequestDTO){
 
-        Set<Ingredient> ingredients = new HashSet<>(ingredientService.findAllById(coffeeRequestDTO.getIngredients()));
+        Set<Ingredient> ingredients = new HashSet<>(ingredientRepository.findAllById(coffeeRequestDTO.getIngredients()));
         return Coffee.builder()
                 .name(coffeeRequestDTO.getName())
                 .ingredients(ingredients)

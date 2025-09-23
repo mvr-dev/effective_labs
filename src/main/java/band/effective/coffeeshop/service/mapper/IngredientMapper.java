@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class IngredientMapper {
-    public IngredientResponseDTO fromEntry(Ingredient ingredient) {
+    public static IngredientResponseDTO fromEntry(Ingredient ingredient) {
         return IngredientResponseDTO.builder()
                 .id(ingredient.getId())
                 .name(ingredient.getName())
@@ -18,7 +18,7 @@ public class IngredientMapper {
                 .coffees_with(ingredient.getCoffeesWith().stream().map(Coffee::getName).toList())
                 .build();
     }
-    public Ingredient toEntry(IngredientRequestDTO ingredientRequest){
+    public static Ingredient toEntry(IngredientRequestDTO ingredientRequest){
         return  Ingredient.builder()
                 .name(ingredientRequest.getName())
                 .quantity(ingredientRequest.getQuantity())

@@ -24,26 +24,26 @@ import java.util.Set;
 @AllArgsConstructor
 public class CoffeeService implements ICoffeeService {
     private final CoffeeRepository repository;
-    private final CoffeeMapper mapper;
+//    private final CoffeeMapper mapper;
     private final IIngredientService ingredientService;
 
     @Override
     @Transactional
     public List<CoffeeResponseDTO> getAllCoffees() {
-        return repository.findAll().stream().map(mapper::fromEntry).toList();
+        return repository.findAll().stream().map(CoffeeMapper::fromEntry).toList();
     }
 
     @Override
     @Transactional
     public Optional<CoffeeResponseDTO> getCoffeeById(Long id) {
-        return repository.findByIdWithIngredients(id).map(mapper::fromEntry);
+        return repository.findByIdWithIngredients(id).map(CoffeeMapper::fromEntry);
     }
 
     @Override
     @Transactional
     public CoffeeResponseDTO addCoffee(CoffeeRequestDTO coffee) {
-        Coffee coffee1 = mapper.toEntry(coffee);
-        return mapper.fromEntry(repository.save(coffee1));
+        Coffee coffee1 = CoffeeMapper.toEntry(coffee);
+        return CoffeeMapper.fromEntry(repository.save(coffee1));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class CoffeeService implements ICoffeeService {
         existingCoffee.setCostPrice(newCostPrice);
 
         Coffee updatedCoffee = repository.save(existingCoffee);
-        return mapper.fromEntry(updatedCoffee);
+        return CoffeeMapper.fromEntry(updatedCoffee);
     }
 
     @Override
@@ -86,6 +86,7 @@ public class CoffeeService implements ICoffeeService {
 
     //служебный метод для других классов
     // !! не используется в контроллере !!
+
     @Override
     public List<Coffee> getAllCoffeesById(List<Long> coffeesId) {
         return repository.findAllById(coffeesId);
