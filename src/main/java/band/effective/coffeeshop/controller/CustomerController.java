@@ -5,7 +5,9 @@ import band.effective.coffeeshop.service.ICustomerService;
 import band.effective.coffeeshop.service.IEmailService;
 import band.effective.coffeeshop.service.impl.CustomerService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,8 +22,10 @@ public class CustomerController {
         return service.getAllCustomers();
     }
     @GetMapping("/{id}")
-    public Customer getCustomerById(@PathVariable Long id){
-        return service.getCustomerById(id);
+    public Customer getCustomerById(@PathVariable long id){
+        return service.getCustomerById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"incorrect id")
+        );
     }
     @PostMapping
     public Customer addCustomer(@RequestBody Customer customer){
@@ -33,7 +37,7 @@ public class CustomerController {
         return service.updateCustomer(Customer);
     }
     @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable Long id){
-        service.deleteCustomer(service.getCustomerById(id));
+    public void deleteCustomer(@PathVariable long id){
+        service.deleteCustomer(id);
     }
 }

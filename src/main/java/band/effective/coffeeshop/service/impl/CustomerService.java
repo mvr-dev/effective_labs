@@ -5,10 +5,13 @@ import band.effective.coffeeshop.repository.CustomerRepository;
 import band.effective.coffeeshop.service.ICustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Primary
@@ -22,8 +25,8 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public Customer getCustomerById(Long id) {
-        return repository.getReferenceById(id);
+    public Optional<Customer> getCustomerById(long id) {
+        return repository.findById(id);
     }
 
 
@@ -42,7 +45,11 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public void deleteCustomer(Customer Customer) {
-        repository.delete(Customer);
+    public void deleteCustomer(long id) {
+        Customer customer = repository.findById(id)
+                .orElseThrow(
+                        ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"incorrect id")
+                );
+        repository.delete(customer);
     }
 }

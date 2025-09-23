@@ -9,12 +9,12 @@ public interface ICustomerService {
 
     List<Customer> getAllCustomers();
 
-    Optional<Customer> getCustomerById(Long id) ;
+    Optional<Customer> getCustomerById(long id) ;
 
     Customer updateCustomer(Customer Customer);
 
     Customer addCustomer(Customer Customer) ;
 
 
-    public void deleteCustomer(Customer Customer);
+    public void deleteCustomer(long id);
 }
