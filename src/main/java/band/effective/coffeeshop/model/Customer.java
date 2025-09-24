@@ -28,6 +28,7 @@ public class Customer {
     @NonNull
     @Size(max = 250)
     private String name;
+
     @NotEmpty
     @NonNull
     @Size(max = 250)
@@ -38,12 +39,10 @@ public class Customer {
     @NotEmpty
     private String email;
 
-    @NotEmpty
     @NonNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
-    @NotEmpty
     @NonNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate lastOrder;

@@ -1,6 +1,7 @@
 package band.effective.coffeeshop.service.impl;
 
 import band.effective.coffeeshop.model.Coffee;
+import band.effective.coffeeshop.model.Customer;
 import band.effective.coffeeshop.model.CustomerOrder;
 import band.effective.coffeeshop.model.Promotion;
 import band.effective.coffeeshop.model.dto.OrderRequestDTO;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,10 @@ public class OrderService implements IOrderService {
     public OrderResponseDTO addOrder(OrderRequestDTO order) {
         CustomerOrder order1 = mapper.toEntry(order);
         order1.setOrderTime(LocalDateTime.now());
+        Customer customer = order1.getCustomer();
+        if (customer!=null){
+            customer.setLastOrder(LocalDate.now());
+        }
         return mapper.fromEntry(repository.save(order1));
     }
 
