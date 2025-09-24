@@ -40,6 +40,7 @@ public class OrderRequestDTO {
     private List<Long> promotions;
 
     @NotNull
-    private OrderStatus status;
+    @Builder.Default
+    private OrderStatus status = OrderStatus.COOKING;
 
 }

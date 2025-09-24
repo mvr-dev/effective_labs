@@ -30,7 +30,6 @@ public class CustomerOrder {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @NonNull
     private Customer customer;
 
     @NonNull

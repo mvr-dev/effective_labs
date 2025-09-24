@@ -18,30 +18,30 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PromotionService implements IPromotionService {
     private PromotionRepository repository;
-    //private PromotionMapper mapper;
+    private PromotionMapper promotionMapper;
     @Override
     public List<PromotionResponseDTO> getAllPromotions() {
         return repository.findAll().stream()
-                .map(PromotionMapper::fromEntry)
+                .map(promotionMapper::fromEntry)
                 .toList();
     }
 
     @Override
     public Optional<PromotionResponseDTO> getPromotionById(long id) {
-        return repository.findById(id).map(PromotionMapper::fromEntry);
+        return repository.findById(id).map(promotionMapper::fromEntry);
     }
 
     @Override
     public PromotionResponseDTO updatePromotion(long id,PromotionRequestDTO promotion) {
-        Promotion toSave = PromotionMapper.toEntry(promotion);
+        Promotion toSave = promotionMapper.toEntry(promotion);
         toSave.setId(id);
-        return PromotionMapper.fromEntry(repository.save(toSave));
+        return promotionMapper.fromEntry(repository.save(toSave));
     }
 
     @Override
     public PromotionResponseDTO addPromotion(PromotionRequestDTO promotion) {
-        return PromotionMapper.fromEntry(
-                repository.save(PromotionMapper.toEntry(promotion))
+        return promotionMapper.fromEntry(
+                repository.save(promotionMapper.toEntry(promotion))
         );
     }
 

@@ -7,10 +7,13 @@ import band.effective.coffeeshop.model.dto.IngredientResponseDTO;
 import band.effective.coffeeshop.service.ICoffeeService;
 import band.effective.coffeeshop.service.IIngredientService;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
+@Component
 public class IngredientMapper {
-    public static IngredientResponseDTO fromEntry(Ingredient ingredient) {
+    public IngredientResponseDTO fromEntry(Ingredient ingredient) {
         return IngredientResponseDTO.builder()
                 .id(ingredient.getId())
                 .name(ingredient.getName())
@@ -18,7 +21,7 @@ public class IngredientMapper {
                 .coffees_with(ingredient.getCoffeesWith().stream().map(Coffee::getName).toList())
                 .build();
     }
-    public static Ingredient toEntry(IngredientRequestDTO ingredientRequest){
+    public Ingredient toEntry(IngredientRequestDTO ingredientRequest){
         return  Ingredient.builder()
                 .name(ingredientRequest.getName())
                 .quantity(ingredientRequest.getQuantity())

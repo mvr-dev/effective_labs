@@ -26,24 +26,25 @@ public class CoffeeService implements ICoffeeService {
     private final CoffeeRepository repository;
 //    private final CoffeeMapper mapper;
     private final IIngredientService ingredientService;
+    private final CoffeeMapper coffeeMapper;
 
     @Override
     @Transactional
     public List<CoffeeResponseDTO> getAllCoffees() {
-        return repository.findAll().stream().map(CoffeeMapper::fromEntry).toList();
+        return repository.findAll().stream().map(coffeeMapper::fromEntry).toList();
     }
 
     @Override
     @Transactional
     public Optional<CoffeeResponseDTO> getCoffeeById(Long id) {
-        return repository.findByIdWithIngredients(id).map(CoffeeMapper::fromEntry);
+        return repository.findByIdWithIngredients(id).map(coffeeMapper::fromEntry);
     }
 
     @Override
     @Transactional
     public CoffeeResponseDTO addCoffee(CoffeeRequestDTO coffee) {
-        Coffee coffee1 = CoffeeMapper.toEntry(coffee);
-        return CoffeeMapper.fromEntry(repository.save(coffee1));
+        Coffee coffee1 = coffeeMapper.toEntry(coffee);
+        return coffeeMapper.fromEntry(repository.save(coffee1));
     }
 
     @Override
@@ -69,7 +70,7 @@ public class CoffeeService implements ICoffeeService {
         existingCoffee.setCostPrice(newCostPrice);
 
         Coffee updatedCoffee = repository.save(existingCoffee);
-        return CoffeeMapper.fromEntry(updatedCoffee);
+        return coffeeMapper.fromEntry(updatedCoffee);
     }
 
     @Override

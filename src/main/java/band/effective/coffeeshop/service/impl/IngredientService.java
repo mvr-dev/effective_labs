@@ -21,9 +21,10 @@ import java.util.Optional;
 @Primary
 public class IngredientService implements IIngredientService {
     private final IngredientRepository repository;
+    private final IngredientMapper ingredientMapper;
     @Override
     public List<IngredientResponseDTO> getAllIngredients() {
-        return repository.findAll().stream().map(IngredientMapper::fromEntry).toList();
+        return repository.findAll().stream().map(ingredientMapper::fromEntry).toList();
     }
 
     //служебный метод без преобразования в Response
@@ -37,7 +38,7 @@ public class IngredientService implements IIngredientService {
     @Override
     @Transactional
     public Optional<IngredientResponseDTO> getIngredientById(long id) {
-        return repository.findByIdWithCoffees(id).map(IngredientMapper::fromEntry);
+        return repository.findByIdWithCoffees(id).map(ingredientMapper::fromEntry);
     }
 
     @Override
@@ -47,14 +48,14 @@ public class IngredientService implements IIngredientService {
 
     @Override
     public IngredientResponseDTO updateIngredient(long id, IngredientRequestDTO ingredient) {
-        var ingredient1 = IngredientMapper.toEntry(ingredient);
+        var ingredient1 = ingredientMapper.toEntry(ingredient);
         ingredient1.setId(id);
-        return IngredientMapper.fromEntry(repository.save(ingredient1));
+        return ingredientMapper.fromEntry(repository.save(ingredient1));
     }
 
     @Override
     public IngredientResponseDTO addIngredient(IngredientRequestDTO ingredient) {
-        return IngredientMapper.fromEntry(repository.save(IngredientMapper.toEntry(ingredient)));
+        return ingredientMapper.fromEntry(repository.save(ingredientMapper.toEntry(ingredient)));
     }
 
     @Override

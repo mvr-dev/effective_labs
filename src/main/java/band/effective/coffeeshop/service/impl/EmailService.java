@@ -1,5 +1,6 @@
 package band.effective.coffeeshop.service.impl;
 
+import band.effective.coffeeshop.model.City;
 import band.effective.coffeeshop.model.dto.NotificationDTO;
 import band.effective.coffeeshop.repository.CustomerRepository;
 import band.effective.coffeeshop.service.IEmailService;
@@ -58,7 +59,7 @@ public class EmailService implements IEmailService {
     }
     @Override
     public void sendWeather(){
-        var weather = weatherService.getWeather();
+        var weather = weatherService.getWeather(City.Omsk);
         if (weather.getMain().getTempMax()>EmailService.MONTH_STATS.get(LocalDate.now().getMonthValue()).get("max")){
             customerRepository.findAll()
                     .forEach(customer-> sendMessage(

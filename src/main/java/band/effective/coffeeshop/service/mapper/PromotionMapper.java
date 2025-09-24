@@ -6,28 +6,32 @@ import band.effective.coffeeshop.model.dto.PromotionRequestDTO;
 import band.effective.coffeeshop.model.dto.PromotionResponseDTO;
 import band.effective.coffeeshop.repository.CoffeeRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-@Service
+@Component
 @AllArgsConstructor
 public class PromotionMapper {
-    private static CoffeeMapper coffeeMapper;
-    private static CoffeeRepository coffeeRepository;
+    @Autowired
+    private CoffeeRepository coffeeRepository;
+    @Autowired
+    private CoffeeMapper coffeeMapper;
 
 
-    public static PromotionResponseDTO fromEntry(Promotion promotion){
+    public PromotionResponseDTO fromEntry(Promotion promotion){
         return PromotionResponseDTO.builder()
                 .id(promotion.getId())
                 .name(promotion.getName())
                 .promotion_price(promotion.getPromotionPrice())
-                .coffees(promotion.getPromotedCoffees().stream().map(CoffeeMapper::fromEntry).toList())
+                .coffees(promotion.getPromotedCoffees().stream().map(coffeeMapper::fromEntry).toList())
                 .price(promotion.getPromotedCoffees().stream().map(Coffee::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add))
                 .available(promotion.isAvailable())
                 .build();
     }
-    public static Promotion toEntry(PromotionRequestDTO requestDTO){
+    public Promotion toEntry(PromotionRequestDTO requestDTO){
         return Promotion.builder()
                 .name(requestDTO.getName())
                 .promotionPrice(requestDTO.getPromotionPrice())
