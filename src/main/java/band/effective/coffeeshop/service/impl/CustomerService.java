@@ -5,6 +5,8 @@ import band.effective.coffeeshop.repository.CustomerRepository;
 import band.effective.coffeeshop.service.ICustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,8 +22,8 @@ public class CustomerService implements ICustomerService {
     private final CustomerRepository repository;
     private final  EmailService emailService;
     @Override
-    public List<Customer> getAllCustomers() {
-        return repository.findAll();
+    public Page<Customer> getAllCustomers(int pageNumber,int pageSize) {
+        return repository.findAll(PageRequest.of(pageNumber,pageSize));
     }
 
     @Override

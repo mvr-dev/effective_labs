@@ -3,7 +3,9 @@ package band.effective.coffeeshop.service;
 import band.effective.coffeeshop.model.Ingredient;
 import band.effective.coffeeshop.model.dto.IngredientRequestDTO;
 import band.effective.coffeeshop.model.dto.IngredientResponseDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +13,7 @@ import java.util.Optional;
 @Service
 public interface IIngredientService {
 
-    List<IngredientResponseDTO> getAllIngredients();
+    Page<IngredientResponseDTO> getAllIngredients(int pageNumber, int pageSize);
     List<Ingredient> getAllIngredientsInStock();
 
 

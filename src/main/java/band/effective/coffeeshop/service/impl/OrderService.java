@@ -10,8 +10,11 @@ import band.effective.coffeeshop.repository.OrderRepository;
 import band.effective.coffeeshop.service.IOrderService;
 import band.effective.coffeeshop.service.mapper.OrderMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -26,8 +29,8 @@ public class OrderService implements IOrderService {
     private OrderMapper mapper;
 
     @Override
-    public List<OrderResponseDTO> getAllOrders() {
-        return repository.findAll().stream().map(mapper::fromEntry).toList();
+    public Page<OrderResponseDTO> getAllOrders(int pageNumber, int pageSize) {
+        return new PageImpl<>(repository.findAll().stream().map(mapper::fromEntry).toList());
     }
 
     @Override

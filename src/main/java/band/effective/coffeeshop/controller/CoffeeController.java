@@ -9,6 +9,7 @@ import band.effective.coffeeshop.service.IIngredientService;
 import band.effective.coffeeshop.service.impl.CoffeeService;
 import band.effective.coffeeshop.service.mapper.CoffeeMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,8 +29,9 @@ public class CoffeeController {
     private final CoffeeMapper mapper;
 
     @GetMapping
-    public List<CoffeeResponseDTO> getAllCoffees(){
-        return service.getAllCoffees();
+    public Page<CoffeeResponseDTO> getAllCoffees(@RequestParam(value = "offset",defaultValue = "0") int pageNumber,
+                                                 @RequestParam(value = "limit", defaultValue = "20") int pageSize){
+        return service.getAllCoffees(pageNumber,pageSize);
 
     }
     @GetMapping("/{id}")

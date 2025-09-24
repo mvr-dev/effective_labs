@@ -5,6 +5,7 @@ import band.effective.coffeeshop.service.ICustomerService;
 import band.effective.coffeeshop.service.IEmailService;
 import band.effective.coffeeshop.service.impl.CustomerService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,8 +19,9 @@ import java.util.List;
 public class CustomerController {
     private final ICustomerService service;
     @GetMapping
-    public List<Customer> getAllCustomers(){
-        return service.getAllCustomers();
+    public Page<Customer> getAllCustomers(@RequestParam(value = "offset",defaultValue = "0") int pageNumber,
+                                          @RequestParam(value = "limit", defaultValue = "20") int pageSize){
+        return service.getAllCustomers(pageNumber,pageSize);
     }
     @GetMapping("/{id}")
     public Customer getCustomerById(@PathVariable long id){
