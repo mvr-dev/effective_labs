@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -28,9 +30,11 @@ public class CustomerOrder {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
+    @NonNull
     private Customer customer;
 
     @NonNull
+    @Size(min = 1, max = 100)
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(name = "coffee_order",
@@ -41,10 +45,13 @@ public class CustomerOrder {
     @EqualsAndHashCode.Exclude
     private List<Coffee> coffees;
 
+    @NonNull
     private OrderStatus status;
+
     @NonNull
     @Min(0)
     private BigDecimal price;
+
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(name = "order_promotion",
@@ -54,5 +61,6 @@ public class CustomerOrder {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Promotion> promotions;
+
     private LocalDateTime orderTime;
 }
