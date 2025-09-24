@@ -7,18 +7,21 @@ import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
 import band.effective.coffeeshop.repository.IngredientRepository;
 import band.effective.coffeeshop.service.IIngredientService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-@Service
+@Component
 @AllArgsConstructor
 public class CoffeeMapper {
-    private static IngredientRepository ingredientRepository;
-    public static CoffeeResponseDTO fromEntry(Coffee coffee){
+    @Autowired
+    private IngredientRepository ingredientRepository;
+    public CoffeeResponseDTO fromEntry(Coffee coffee){
         return CoffeeResponseDTO.builder()
                 .ingredients(coffee.getIngredients().stream().map(Ingredient::getName).toList())
                 .name(coffee.getName())
@@ -27,7 +30,7 @@ public class CoffeeMapper {
                 .price(coffee.getPrice())
                 .build();
     }
-    public static Coffee toEntry(CoffeeRequestDTO coffeeRequestDTO){
+    public Coffee toEntry(CoffeeRequestDTO coffeeRequestDTO){
 
         Set<Ingredient> ingredients = new HashSet<>(ingredientRepository.findAllById(coffeeRequestDTO.getIngredients()));
         return Coffee.builder()
@@ -37,4 +40,5 @@ public class CoffeeMapper {
                 .costPrice(ingredients.stream().map(Ingredient::getCostPerOne).reduce(new BigDecimal("0.0"),(x, y)->x.add(y)))
                 .build();
     }
+
 }

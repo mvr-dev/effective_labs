@@ -13,6 +13,8 @@ import band.effective.coffeeshop.service.ICoffeeService;
 import band.effective.coffeeshop.service.ICustomerService;
 import band.effective.coffeeshop.service.IPromotionService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,12 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-@Service
+@Component
 public class OrderMapper {
-    private static CoffeeRepository coffeeRepository;
-    private static BaristaRepository baristaRepository;
-    private static CustomerRepository customerRepository;
-    private static PromotionRepository promotionRepository;
+    @Autowired
+    private  CoffeeRepository coffeeRepository;
+    @Autowired
+    private  BaristaRepository baristaRepository;
+    @Autowired
+    private  CustomerRepository customerRepository;
+    @Autowired
+    private  PromotionRepository promotionRepository;
+    private CoffeeMapper coffeeMapper;
+
     public CustomerOrder toEntry(OrderRequestDTO orderRequestDTO){
         var coffees = coffeeRepository.findAllById(orderRequestDTO.getCoffeesId());
         CustomerOrder order = CustomerOrder.builder()
@@ -56,7 +64,7 @@ public class OrderMapper {
                 .id(order.getId())
                 .barista(order.getBarista())
                 .customer(order.getCustomer())
-                .coffees(order.getCoffees().stream().map(CoffeeMapper::fromEntry).toList())
+                .coffees(order.getCoffees().stream().map(coffeeMapper::fromEntry).toList())
                 .price(order.getCoffees().stream().map(Coffee::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add))
                 .status(order.getStatus().toString())
                 .time(order.getOrderTime())
@@ -65,7 +73,7 @@ public class OrderMapper {
         if (order.getPromotions()!=null){
             response.setPromotions(order.getPromotions().stream().map(Promotion::getName).toList());
             for (Promotion promotion : order.getPromotions()) {
-                response.getCoffees().addAll(promotion.getPromotedCoffees().stream().map(CoffeeMapper::fromEntry).toList());
+                response.getCoffees().addAll(promotion.getPromotedCoffees().stream().map(coffeeMapper::fromEntry).toList());
                 response.setPrice(response.getPrice().add(promotion.getPromotionPrice()));
             }
         }
