@@ -30,6 +30,7 @@ public class CoffeeController {
     @GetMapping
     public List<CoffeeResponseDTO> getAllCoffees(){
         return service.getAllCoffees();
+
     }
     @GetMapping("/{id}")
     public CoffeeResponseDTO getCoffeeById(@PathVariable Long id){
@@ -40,15 +41,16 @@ public class CoffeeController {
     }
 
     @PutMapping("/{id}")
-    public CoffeeResponseDTO updateCoffeeById(@PathVariable Long id,@RequestBody CoffeeRequestDTO coffee){
+    public CoffeeResponseDTO updateCoffeeById(@PathVariable long id,@RequestBody CoffeeRequestDTO coffee){
         return service.updateCoffee(id,coffee);
+      
     }
     @PostMapping
     public CoffeeResponseDTO postCoffee(@RequestBody CoffeeRequestDTO coffee){
         return  service.addCoffee(coffee);
     }
     @DeleteMapping("/{id}")
-    public void deleteCoffee(@PathVariable Long id){
+    public void deleteCoffee(@PathVariable long id){
         service.deleteCoffee(id);
     }
 

@@ -20,12 +20,15 @@ public class Ingredient {
     @Id
     @GeneratedValue
     private Long id;
+
     @NonNull
     @NotEmpty
     private String name;
+
     @NonNull
     @Min(value = 0)
     private BigDecimal quantity;
+  
     @ManyToMany(mappedBy = "ingredients")
     @JsonIgnore
     @ToString.Exclude

@@ -2,8 +2,7 @@ package band.effective.coffeeshop.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -23,6 +22,7 @@ public class Coffee {
 
     @NonNull
     @NotEmpty
+    @Size(max=250)
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
@@ -45,10 +45,15 @@ public class Coffee {
 
     @NonNull
     @Min(0)
+    @Max(100000)
+    @Positive
     private BigDecimal price;
 
     @NonNull
     @Min(0)
+    @Max(100000)
+    @Positive
     private BigDecimal costPrice;
+
 
 }
