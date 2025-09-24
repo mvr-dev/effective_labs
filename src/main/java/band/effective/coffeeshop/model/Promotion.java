@@ -27,8 +27,7 @@ public class Promotion {
     @EqualsAndHashCode.Include
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "coffee_promotion",
             joinColumns = @JoinColumn(name = "promotion_id"),
             inverseJoinColumns = @JoinColumn(name = "coffee_id"))

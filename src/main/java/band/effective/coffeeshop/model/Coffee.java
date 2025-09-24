@@ -10,7 +10,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,8 +30,7 @@ public class Coffee {
     @EqualsAndHashCode.Include
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "coffee_ingredient",
             joinColumns = @JoinColumn(name = "coffee_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
