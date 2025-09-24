@@ -34,7 +34,6 @@ public class CustomerOrder {
 
     @NonNull
     @ManyToMany(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(name = "coffee_order",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "coffee_id"))

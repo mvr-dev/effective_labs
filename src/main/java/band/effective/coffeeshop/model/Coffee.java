@@ -10,7 +10,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,15 +20,16 @@ import java.util.Set;
 public class Coffee {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NonNull
     @NotEmpty
     @Size(max=250)
+    @EqualsAndHashCode.Include
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "coffee_ingredient",
             joinColumns = @JoinColumn(name = "coffee_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
@@ -47,12 +50,14 @@ public class Coffee {
     @Min(0)
     @Max(100000)
     @Positive
+    @EqualsAndHashCode.Include
     private BigDecimal price;
 
     @NonNull
     @Min(0)
     @Max(100000)
     @Positive
+    @EqualsAndHashCode.Include
     private BigDecimal costPrice;
 
 
