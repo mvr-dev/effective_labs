@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/baristas")
@@ -18,7 +19,7 @@ public class BaristaController {
         return service.getAllBaristas();
     }
     @GetMapping("/{id}")
-    public Barista getBaristaById(@PathVariable Long id){
+    public Barista getBaristaById(@PathVariable long id){
         return service.getBaristaById(id);
     }
     @PostMapping
@@ -26,12 +27,11 @@ public class BaristaController {
         return service.addBarista(barista);
     }
     @PutMapping("/{id}")
-    public  Barista updateBarista(@PathVariable Long id, @RequestBody Barista barista){
-        barista.setId(id);
-        return service.updateBarista(barista);
+    public  Barista updateBarista(@PathVariable long id, @RequestBody Barista barista){
+        return service.updateBarista(id,barista);
     }
     @DeleteMapping("/{id}")
-    public void deleteBarista(@PathVariable Long id){
-        service.deleteBarista(service.getBaristaById(id));
+    public void deleteBarista(@PathVariable long id){
+        service.deleteBarista(id);
     }
 }

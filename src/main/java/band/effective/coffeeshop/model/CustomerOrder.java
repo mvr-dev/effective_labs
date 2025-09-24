@@ -34,8 +34,7 @@ public class CustomerOrder {
     private Customer customer;
 
     @NonNull
-    @Size(min = 1, max = 100)
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(name = "coffee_order",
             joinColumns = @JoinColumn(name = "order_id"),
@@ -51,8 +50,7 @@ public class CustomerOrder {
     @NonNull
     @Min(0)
     private BigDecimal price;
-
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(name = "order_promotion",
             joinColumns = @JoinColumn(name = "order_id"),

@@ -11,7 +11,8 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class CoffeeRequestDTO {
     @NotEmpty
@@ -21,6 +22,7 @@ public class CoffeeRequestDTO {
     @NotEmpty
     @NonNull
     private List<Long> ingredients;
+
     @NotEmpty
     @NonNull
     @Positive

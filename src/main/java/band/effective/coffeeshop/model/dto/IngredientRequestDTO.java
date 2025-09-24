@@ -8,8 +8,13 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
+import lombok.*;
 
-@Data
+
+import java.math.BigDecimal;
+
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,15 +24,13 @@ public class IngredientRequestDTO {
     @Size(max = 250)
     private String name;
 
-    @NotEmpty
     @NonNull
     @Min(0)
-    private Double quantity;
+    private BigDecimal quantity;
+  
     @JsonAlias({"price_per_one", "cost_per_one"})
-
     @Min(0)
     @NonNull
-    @NotEmpty
     private BigDecimal costPerOne;
 
 }

@@ -7,10 +7,14 @@ import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
 import band.effective.coffeeshop.service.ICoffeeService;
 import band.effective.coffeeshop.service.IIngredientService;
 import band.effective.coffeeshop.service.impl.CoffeeService;
+import band.effective.coffeeshop.service.mapper.CoffeeMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,47 +25,32 @@ import java.util.Set;
 @AllArgsConstructor
 public class CoffeeController {
     private final ICoffeeService service;
-
-    private final IIngredientService ingredientService;
+    private final CoffeeMapper mapper;
 
     @GetMapping
     public List<CoffeeResponseDTO> getAllCoffees(){
-        var coffees = service.getAllCoffees();
-        return coffees.stream().map(CoffeeResponseDTO::fromEntry).toList();
+        return service.getAllCoffees();
+
     }
     @GetMapping("/{id}")
     public CoffeeResponseDTO getCoffeeById(@PathVariable Long id){
         var coffee = service.getCoffeeById(id);
-        return CoffeeResponseDTO.fromEntry(coffee);
+        return coffee.orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Incorrect id")
+        );
     }
 
     @PutMapping("/{id}")
-    public Coffee updateCoffeeById(@PathVariable Long id,@RequestBody CoffeeRequestDTO coffee){
-        Set<Ingredient> ingredients = new HashSet<>(ingredientService.findAllById(coffee.getIngredients()));
-        Coffee coffee1 = Coffee.builder()
-                .id(id)
-                .name(coffee.getName())
-                .ingredients(ingredients)
-                .costPrice(ingredients.stream().mapToDouble(Ingredient::getCostPerOne).sum())
-                .build();
-        return service.updateCoffee(coffee1);
+    public CoffeeResponseDTO updateCoffeeById(@PathVariable long id,@RequestBody CoffeeRequestDTO coffee){
+        return service.updateCoffee(id,coffee);
+      
     }
     @PostMapping
-    public Coffee postCoffee(@RequestBody CoffeeRequestDTO coffee){
-        Set<Ingredient> ingredients = new HashSet<>(ingredientService.findAllById(coffee.getIngredients()));
-        System.out.println(ingredients);
-        Coffee coffee1 = Coffee.builder()
-                .name(coffee.getName())
-                .ingredients(ingredients)
-                .price(coffee.getPrice())
-                .costPrice(ingredients.stream().mapToDouble(Ingredient::getCostPerOne).sum())
-                .build();
-        System.out.println(coffee1);
-        return service.addCoffee(coffee1);
+    public CoffeeResponseDTO postCoffee(@RequestBody CoffeeRequestDTO coffee){
+        return  service.addCoffee(coffee);
     }
     @DeleteMapping("/{id}")
-    public void deleteCoffee(@PathVariable Long id){
-
+    public void deleteCoffee(@PathVariable long id){
         service.deleteCoffee(id);
     }
 

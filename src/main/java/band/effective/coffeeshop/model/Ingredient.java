@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Set;
 //many-to-many problem
 @Data
@@ -26,8 +27,8 @@ public class Ingredient {
 
     @NonNull
     @Min(value = 0)
-    private Double quantity;
-
+    private BigDecimal quantity;
+  
     @ManyToMany(mappedBy = "ingredients")
     @JsonIgnore
     @ToString.Exclude
@@ -37,7 +38,7 @@ public class Ingredient {
     @NonNull
     @Min(0)
     @JsonAlias({"price_per_one", "cost_per_one"})
-    private Double costPerOne;
+    private BigDecimal costPerOne;
 
 
 }

@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

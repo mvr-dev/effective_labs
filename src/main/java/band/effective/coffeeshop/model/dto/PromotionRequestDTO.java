@@ -12,7 +12,8 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class PromotionRequestDTO {
     @NonNull
