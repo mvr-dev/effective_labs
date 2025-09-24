@@ -1,5 +1,6 @@
 package band.effective.coffeeshop.controller;
 
+import band.effective.coffeeshop.model.City;
 import band.effective.coffeeshop.model.dto.NotificationDTO;
 import band.effective.coffeeshop.service.ICustomerService;
 import band.effective.coffeeshop.service.IEmailService;
@@ -18,8 +19,8 @@ import java.util.Map;
 @RequestMapping("/notification")
 @AllArgsConstructor
 public class NotificationController {
-    private WeatherService weatherService;
     private IEmailService emailService;
+    private WeatherService weatherService;
 
     private final ICustomerService customerService;
 
@@ -29,7 +30,7 @@ public class NotificationController {
     }
     @Scheduled(cron = "0 0 9 * * *")
     public void sendWeather(){
-        emailService.sendWeather();
+
     }
     @Scheduled(cron = "0 0 12 * * *")
     public void sendHappyBirthday() {
