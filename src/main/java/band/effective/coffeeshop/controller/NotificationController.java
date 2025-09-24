@@ -1,5 +1,6 @@
 package band.effective.coffeeshop.controller;
 
+import band.effective.coffeeshop.model.City;
 import band.effective.coffeeshop.model.dto.NotificationDTO;
 import band.effective.coffeeshop.service.ICustomerService;
 import band.effective.coffeeshop.service.IEmailService;
@@ -17,8 +18,8 @@ import java.util.Map;
 @RequestMapping("/notification")
 @AllArgsConstructor
 public class NotificationController {
-    private WeatherService weatherService;
     private IEmailService emailService;
+    private WeatherService weatherService;
 
     private final ICustomerService customerService;
     public static final Map<Integer, Map<String, Integer>> MONTH_STATS = Map.ofEntries(
@@ -44,8 +45,7 @@ public class NotificationController {
     }
     @Scheduled(cron = "0 0 9 * * *")
     public void sendWeather(){
-        System.out.println("send");
-        var weather = weatherService.getWeather();
+        var weather = weatherService.getWeather(City.Omsk);
         if (weather.getMain().getTempMax()>MONTH_STATS.get(LocalDate.now().getMonthValue()).get("max")){
             customerService.getAllCustomers()
                     .forEach(customer-> emailService.sendMessage(
