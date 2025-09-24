@@ -1,5 +1,6 @@
 package band.effective.coffeeshop.service;
 
+import band.effective.coffeeshop.model.City;
 import band.effective.coffeeshop.model.dto.NotificationDTO;
 
 public interface IEmailService {

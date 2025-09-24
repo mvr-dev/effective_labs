@@ -20,9 +20,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class NotificationController {
     private IEmailService emailService;
-    private WeatherService weatherService;
-
-    private final ICustomerService customerService;
 
     @GetMapping("/toGroup")
     public void sendToGroup(@RequestBody NotificationDTO notificationDTO){
@@ -30,7 +27,7 @@ public class NotificationController {
     }
     @Scheduled(cron = "0 0 9 * * *")
     public void sendWeather(){
-
+        emailService.sendWeather();
     }
     @Scheduled(cron = "0 0 12 * * *")
     public void sendHappyBirthday() {
