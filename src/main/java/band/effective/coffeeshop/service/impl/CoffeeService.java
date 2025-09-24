@@ -10,6 +10,9 @@ import band.effective.coffeeshop.service.IIngredientService;
 import band.effective.coffeeshop.service.mapper.CoffeeMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,8 +33,11 @@ public class CoffeeService implements ICoffeeService {
 
     @Override
     @Transactional
-    public List<CoffeeResponseDTO> getAllCoffees() {
-        return repository.findAll().stream().map(coffeeMapper::fromEntry).toList();
+    public Page<CoffeeResponseDTO> getAllCoffees(int pageNumber, int pageSize) {
+
+        return new PageImpl<>(repository.findAll(PageRequest.of(pageNumber,pageSize))
+                        .stream().map(coffeeMapper::fromEntry).toList());
+
     }
 
     @Override

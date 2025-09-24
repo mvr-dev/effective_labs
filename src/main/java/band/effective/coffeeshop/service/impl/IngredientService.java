@@ -10,7 +10,10 @@ import band.effective.coffeeshop.service.mapper.IngredientMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,8 +26,8 @@ public class IngredientService implements IIngredientService {
     private final IngredientRepository repository;
     private final IngredientMapper ingredientMapper;
     @Override
-    public List<IngredientResponseDTO> getAllIngredients() {
-        return repository.findAll().stream().map(ingredientMapper::fromEntry).toList();
+    public Page<IngredientResponseDTO> getAllIngredients(int pageNumber, int pageSize) {
+        return new PageImpl<>(repository.findAll().stream().map(ingredientMapper::fromEntry).toList());
     }
 
     //служебный метод без преобразования в Response
