@@ -12,16 +12,19 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Promotion {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NonNull
+    @EqualsAndHashCode.Include
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
@@ -36,6 +39,7 @@ public class Promotion {
 
     @NonNull
     @Min(0)
+    @EqualsAndHashCode.Include
     private BigDecimal promotionPrice;
 
     @ManyToMany(mappedBy = "promotions")

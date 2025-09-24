@@ -14,22 +14,27 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CustomerOrder {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NonNull
     @ManyToOne
+    @EqualsAndHashCode.Include
     private Barista barista;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Include
     private Customer customer;
 
     @NonNull
@@ -44,10 +49,12 @@ public class CustomerOrder {
     private List<Coffee> coffees;
 
     @NonNull
+    @EqualsAndHashCode.Include
     private OrderStatus status;
 
     @NonNull
     @Min(0)
+    @EqualsAndHashCode.Include
     private BigDecimal price;
     @ManyToMany(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -59,5 +66,6 @@ public class CustomerOrder {
     @EqualsAndHashCode.Exclude
     private List<Promotion> promotions;
 
+    @EqualsAndHashCode.Include
     private LocalDateTime orderTime;
 }
