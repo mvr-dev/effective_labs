@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,9 @@ public class OrderService implements IOrderService {
 
     @Override
     public OrderResponseDTO addOrder(OrderRequestDTO order) {
-        return mapper.fromEntry(repository.save(mapper.toEntry(order)));
+        CustomerOrder order1 = mapper.toEntry(order);
+        order1.setOrderTime(LocalDateTime.now());
+        return mapper.fromEntry(repository.save(order1));
     }
 
     @Override
