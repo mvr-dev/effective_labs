@@ -2,57 +2,81 @@ package band.effective.coffeeshop.service.impl;
 
 import band.effective.coffeeshop.model.Coffee;
 import band.effective.coffeeshop.model.Ingredient;
+import band.effective.coffeeshop.model.dto.CoffeeRequestDTO;
+import band.effective.coffeeshop.model.dto.CoffeeResponseDTO;
 import band.effective.coffeeshop.repository.CoffeeRepository;
-import band.effective.coffeeshop.repository.IngredientRepository;
 import band.effective.coffeeshop.service.ICoffeeService;
-import jakarta.persistence.EntityNotFoundException;
+import band.effective.coffeeshop.service.IIngredientService;
+import band.effective.coffeeshop.service.mapper.CoffeeMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class CoffeeService implements ICoffeeService {
     private final CoffeeRepository repository;
-
-    private final IngredientRepository ingredientRepository;
+//    private final CoffeeMapper mapper;
+    private final IIngredientService ingredientService;
 
     @Override
     @Transactional
-    public List<Coffee> getAllCoffees() {
-        return repository.findAll();
-    }
-
-    @Transactional
-    public List<Coffee> getAllCoffeesById(Iterable<Long> id){
-        return repository.findAllById(id);
+    public List<CoffeeResponseDTO> getAllCoffees() {
+        return repository.findAll().stream().map(CoffeeMapper::fromEntry).toList();
     }
 
     @Override
     @Transactional
-    public Coffee getCoffeeById(Long id) {
-        return repository.findByIdWithIngredients(id).orElse(null);
+    public Optional<CoffeeResponseDTO> getCoffeeById(Long id) {
+        return repository.findByIdWithIngredients(id).map(CoffeeMapper::fromEntry);
     }
 
     @Override
     @Transactional
-    public Coffee addCoffee(Coffee coffee) {
-        return repository.save(coffee);
+    public CoffeeResponseDTO addCoffee(CoffeeRequestDTO coffee) {
+        Coffee coffee1 = CoffeeMapper.toEntry(coffee);
+        return CoffeeMapper.fromEntry(repository.save(coffee1));
     }
 
     @Override
     @Transactional
-    public Coffee updateCoffee(Coffee coffee) {
-        return repository.save(coffee);
+    public CoffeeResponseDTO updateCoffee(Long id, CoffeeRequestDTO coffeeRequestDTO) {
+        Coffee existingCoffee = repository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND , "No coffee with id "+id
+                )
+        );
+
+        existingCoffee.setName(coffeeRequestDTO.getName());
+        existingCoffee.setPrice(coffeeRequestDTO.getPrice());
+
+        Set<Ingredient> newIngredients = new HashSet<>(
+                ingredientService.findAllById(coffeeRequestDTO.getIngredients())
+        );
+        existingCoffee.setIngredients(newIngredients);
+
+        BigDecimal newCostPrice = newIngredients.stream()
+                .map(Ingredient::getCostPerOne)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        existingCoffee.setCostPrice(newCostPrice);
+
+        Coffee updatedCoffee = repository.save(existingCoffee);
+        return CoffeeMapper.fromEntry(updatedCoffee);
     }
 
     @Override
     @Transactional
     public void deleteCoffee(Long id) {
-        Coffee coffee = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Coffee coffee = repository.findById(id).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND,"Incorrect id"));
         for(Ingredient ingredient : coffee.getIngredients()){
             ingredient.getCoffeesWith().remove(coffee);
         }
@@ -60,23 +84,12 @@ public class CoffeeService implements ICoffeeService {
         repository.delete(coffee);
     }
 
-    @Override
-    @Transactional
-    public Set<Ingredient> getCoffeeIngredients(Long id) {
-//        var ingredientsIds =
-          return repository.getReferenceById(id).getIngredients();
-//        return new HashSet<>(ingredientRepository.findAllById(ingredientsIds));
-
-    }
+    //служебный метод для других классов
+    // !! не используется в контроллере !!
 
     @Override
     public List<Coffee> getAllCoffeesById(List<Long> coffeesId) {
         return repository.findAllById(coffeesId);
-    }
-
-
-    public List<Coffee> getAllById(Iterable<Long> ids){
-        return repository.findAllById(ids);
     }
 
 }

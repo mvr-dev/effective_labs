@@ -1,26 +1,30 @@
 package band.effective.coffeeshop.service;
 
 import band.effective.coffeeshop.model.Ingredient;
+import band.effective.coffeeshop.model.dto.IngredientRequestDTO;
+import band.effective.coffeeshop.model.dto.IngredientResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public interface IIngredientService {
 
-    List<Ingredient> getAllIngredients();
+    List<IngredientResponseDTO> getAllIngredients();
     List<Ingredient> getAllIngredientsInStock();
 
 
-    Ingredient getIngredientById(Long id);
-    Ingredient getIngredientByName(String name);
+    Optional<IngredientResponseDTO> getIngredientById(long id);
+
 
     List<Ingredient> findAllById(List<Long> id);
 
 
-    Ingredient updateIngredient(Ingredient ingredient);
+    IngredientResponseDTO updateIngredient(long id, IngredientRequestDTO ingredient);
 
-    Ingredient addIngredient(Ingredient ingredient);
+    IngredientResponseDTO addIngredient(IngredientRequestDTO ingredient);
 
 
-    void deleteIngredient(Ingredient ingredient);
+    void deleteIngredient(long id);
 }

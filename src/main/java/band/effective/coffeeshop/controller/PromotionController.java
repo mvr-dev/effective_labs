@@ -6,7 +6,9 @@ import band.effective.coffeeshop.model.dto.PromotionResponseDTO;
 import band.effective.coffeeshop.service.IPromotionService;
 import band.effective.coffeeshop.service.impl.CoffeeService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -16,54 +18,32 @@ import java.util.List;
 public class PromotionController {
     private IPromotionService service;
 
-    private final CoffeeService coffeeService;
 
     @GetMapping
     public List<PromotionResponseDTO> getAllPromotions(){
-        return service.getAllPromotions().stream()
-                .map(PromotionResponseDTO::fromEntry)
-                .toList();
+        return service.getAllPromotions();
     }
 
     @GetMapping("/{id}")
-    public PromotionResponseDTO getPromotionById(@PathVariable Long id){
-        return PromotionResponseDTO.fromEntry(service.getPromotionById(id));
+    public PromotionResponseDTO getPromotionById(@PathVariable long id){
+        return service.getPromotionById(id).orElseThrow(
+                ()->new ResponseStatusException(HttpStatus.NOT_FOUND,"incorrect id")
+        );
     }
 
     @PostMapping
     public PromotionResponseDTO postPromotion(@RequestBody PromotionRequestDTO promotionRequestDTO){
-        Promotion promotion = Promotion.builder()
-                .name(promotionRequestDTO.getName())
-                .promotionPrice(promotionRequestDTO.getPromotionPrice())
-                .promotedCoffees(coffeeService.getAllCoffeesById(promotionRequestDTO.getCoffeesId()))
-                .available(true)
-                .build();
-        service.addPromotion(promotion);
-        return PromotionResponseDTO.fromEntry(promotion);
+        return service.addPromotion(promotionRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public PromotionResponseDTO updatePromotion(@PathVariable Long id,@RequestBody PromotionRequestDTO requestDTO){
-        var promotion = service.getPromotionById(id);
-        if(requestDTO.getPromotionPrice()!=null){
-            promotion.setPromotionPrice(requestDTO.getPromotionPrice());
-        }
-        if (requestDTO.getName()!=null){
-            promotion.setName(requestDTO.getName());
-        }
-        if(requestDTO.getCoffeesId()!=null){
-            promotion.setPromotedCoffees(coffeeService.getAllCoffeesById(requestDTO.getCoffeesId()));
-        }
-        service.updatePromotion(promotion);
-        return PromotionResponseDTO.fromEntry(promotion);
+    public PromotionResponseDTO updatePromotion(@PathVariable long id,@RequestBody PromotionRequestDTO requestDTO){
+        return service.updatePromotion(id,requestDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePromotion(@PathVariable Long id) {
-        var promotion = service.getPromotionById(id);
-        if (promotion!=null) {
-            promotion.setAvailable(false);
-        }
+    public void deletePromotion(@PathVariable long id) {
+        service.deletePromotion(id);
     }
 
 }

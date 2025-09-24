@@ -1,42 +1,55 @@
 package band.effective.coffeeshop.service.impl;
 
 import band.effective.coffeeshop.model.Promotion;
+import band.effective.coffeeshop.model.dto.PromotionRequestDTO;
+import band.effective.coffeeshop.model.dto.PromotionResponseDTO;
 import band.effective.coffeeshop.repository.PromotionRepository;
 import band.effective.coffeeshop.service.IPromotionService;
+import band.effective.coffeeshop.service.mapper.PromotionMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class PromotionService implements IPromotionService {
     private PromotionRepository repository;
+    //private PromotionMapper mapper;
     @Override
-    public List<Promotion> getAllPromotions() {
-        return repository.findAll();
+    public List<PromotionResponseDTO> getAllPromotions() {
+        return repository.findAll().stream()
+                .map(PromotionMapper::fromEntry)
+                .toList();
     }
 
     @Override
-    public Promotion getPromotionById(Long id) {
-        return repository.findById(id).orElse(null);
-    }
-    public List<Promotion> getAllPromotionsById(Iterable<Long> id){
-        return repository.findAllById(id);
+    public Optional<PromotionResponseDTO> getPromotionById(long id) {
+        return repository.findById(id).map(PromotionMapper::fromEntry);
     }
 
     @Override
-    public Promotion updatePromotion(Promotion promotion) {
-        return repository.save(promotion);
+    public PromotionResponseDTO updatePromotion(long id,PromotionRequestDTO promotion) {
+        Promotion toSave = PromotionMapper.toEntry(promotion);
+        toSave.setId(id);
+        return PromotionMapper.fromEntry(repository.save(toSave));
     }
 
     @Override
-    public Promotion addPromotion(Promotion promotion) {
-        return repository.save(promotion);
+    public PromotionResponseDTO addPromotion(PromotionRequestDTO promotion) {
+        return PromotionMapper.fromEntry(
+                repository.save(PromotionMapper.toEntry(promotion))
+        );
     }
 
     @Override
-    public void deletePromotion(Promotion promotion) {
+    public void deletePromotion(long id) {
+        Promotion promotion = repository.findById(id).orElseThrow(
+                ()->new ResponseStatusException(HttpStatus.NOT_FOUND,"incorrect id")
+        );
         repository.delete(promotion);
     }
 

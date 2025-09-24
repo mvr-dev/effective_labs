@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -35,12 +36,11 @@ public class Promotion {
 
     @NonNull
     @Min(0)
-    private Double promotionPrice;
+    private BigDecimal promotionPrice;
 
     @ManyToMany(mappedBy = "promotions")
     private Set<CustomerOrder> orders;
-    @NonNull
-    private boolean available;
+    private boolean available = true;
 
 
 

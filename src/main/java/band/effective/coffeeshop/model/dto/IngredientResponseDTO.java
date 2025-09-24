@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -14,7 +15,7 @@ import java.util.List;
 public class IngredientResponseDTO {
     private Long id;
     private String name;
-    private Double quantity;
+    private BigDecimal quantity;
     private List<String> coffees_with;
-    private Double cost_per_one;
+    private BigDecimal cost_per_one;
 }
