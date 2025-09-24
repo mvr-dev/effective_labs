@@ -64,7 +64,7 @@ public class OrderMapper {
                 .id(order.getId())
                 .barista(order.getBarista())
                 .customer(order.getCustomer())
-                .coffees(order.getCoffees().stream().map(coffeeMapper::fromEntry).toList())
+                .coffees(new ArrayList<>(order.getCoffees().stream().map(coffeeMapper::fromEntry).toList()))
                 .price(order.getCoffees().stream().map(Coffee::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add))
                 .status(order.getStatus().toString())
                 .time(order.getOrderTime())
