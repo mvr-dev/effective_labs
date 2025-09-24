@@ -7,6 +7,7 @@ import band.effective.coffeeshop.model.dto.IngredientResponseDTO;
 import band.effective.coffeeshop.service.IIngredientService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,8 +23,9 @@ public class IngredientController {
     private final IIngredientService service;
 
     @GetMapping
-    public List<IngredientResponseDTO> getAllIngredients(){
-        return service.getAllIngredients();
+    public Page<IngredientResponseDTO> getAllIngredients(@RequestParam(value = "offset",defaultValue = "0") int pageNumber,
+                                                         @RequestParam(value = "limit", defaultValue = "20") int pageSize){
+        return service.getAllIngredients(pageNumber, pageSize);
     }
     @GetMapping("/{id}")
     public IngredientResponseDTO getIngredientById(@PathVariable Long id){

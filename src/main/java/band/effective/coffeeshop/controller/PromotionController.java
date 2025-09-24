@@ -6,6 +6,7 @@ import band.effective.coffeeshop.model.dto.PromotionResponseDTO;
 import band.effective.coffeeshop.service.IPromotionService;
 import band.effective.coffeeshop.service.impl.CoffeeService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,8 +21,9 @@ public class PromotionController {
 
 
     @GetMapping
-    public List<PromotionResponseDTO> getAllPromotions(){
-        return service.getAllPromotions();
+    public Page<PromotionResponseDTO> getAllPromotions(@RequestParam(value = "offset",defaultValue = "0") int pageNumber,
+                                                       @RequestParam(value = "limit", defaultValue = "20") int pageSize){
+        return service.getAllPromotions(pageNumber,pageSize);
     }
 
     @GetMapping("/{id}")

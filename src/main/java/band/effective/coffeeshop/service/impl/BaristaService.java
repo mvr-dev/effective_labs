@@ -5,11 +5,12 @@ import band.effective.coffeeshop.repository.BaristaRepository;
 import band.effective.coffeeshop.service.IBaristaService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Service
 @Primary
@@ -17,8 +18,8 @@ import java.util.List;
 public class BaristaService implements IBaristaService {
     private final BaristaRepository repository;
     @Override
-    public List<Barista> getAllBaristas() {
-        return repository.findAll();
+    public Page<Barista> getAllBaristas(int pageNumber, int pageSize) {
+        return repository.findAll(PageRequest.of(pageNumber,pageSize));
     }
 
     @Override

@@ -6,6 +6,7 @@ import band.effective.coffeeshop.model.dto.OrderResponseDTO;
 import band.effective.coffeeshop.service.*;
 import band.effective.coffeeshop.service.impl.*;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,8 +24,9 @@ public class OrderController {
     private final IOrderService service;
 
     @GetMapping
-    public List<OrderResponseDTO> getOrders(){
-        return service.getAllOrders();
+    public Page<OrderResponseDTO> getAllOrders(@RequestParam(value = "offset",defaultValue = "0") int pageNumber,
+                                               @RequestParam(value = "limit", defaultValue = "20") int pageSize){
+        return service.getAllOrders( pageNumber, pageSize);
     }
 
     @GetMapping("/{id}")

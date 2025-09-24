@@ -4,6 +4,8 @@ import band.effective.coffeeshop.model.Barista;
 import band.effective.coffeeshop.service.IBaristaService;
 import band.effective.coffeeshop.service.impl.BaristaService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,8 +17,9 @@ import java.util.Optional;
 public class BaristaController {
     private final IBaristaService service;
     @GetMapping
-    public List<Barista> getAllBaristas(){
-        return service.getAllBaristas();
+    public Page<Barista> getAllBaristas(@RequestParam(value = "offset",defaultValue = "0") int pageNumber,
+                                        @RequestParam(value = "limit", defaultValue = "20") int pageSize){
+        return service.getAllBaristas(pageNumber,pageSize);
     }
     @GetMapping("/{id}")
     public Barista getBaristaById(@PathVariable long id){

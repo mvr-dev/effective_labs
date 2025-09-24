@@ -7,8 +7,11 @@ import band.effective.coffeeshop.repository.PromotionRepository;
 import band.effective.coffeeshop.service.IPromotionService;
 import band.effective.coffeeshop.service.mapper.PromotionMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -20,10 +23,10 @@ public class PromotionService implements IPromotionService {
     private PromotionRepository repository;
     private PromotionMapper promotionMapper;
     @Override
-    public List<PromotionResponseDTO> getAllPromotions() {
-        return repository.findAll().stream()
+    public Page<PromotionResponseDTO> getAllPromotions(int pageNumber,int pageSize) {
+        return new PageImpl<>(repository.findAll().stream()
                 .map(promotionMapper::fromEntry)
-                .toList();
+                .toList());
     }
 
     @Override
