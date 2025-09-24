@@ -15,14 +15,17 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Coffee {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NonNull
     @NotEmpty
     @Size(max=250)
+    @EqualsAndHashCode.Include
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
@@ -47,12 +50,14 @@ public class Coffee {
     @Min(0)
     @Max(100000)
     @Positive
+    @EqualsAndHashCode.Include
     private BigDecimal price;
 
     @NonNull
     @Min(0)
     @Max(100000)
     @Positive
+    @EqualsAndHashCode.Include
     private BigDecimal costPrice;
 
 

@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @Entity
 @NoArgsConstructor
@@ -15,14 +17,17 @@ import lombok.*;
 public class Barista {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NonNull
     @NotEmpty
     @Size(max=250)
+    @EqualsAndHashCode.Include
     private String surname;
     @NonNull
     @NotEmpty
     @Size(max=250)
+    @EqualsAndHashCode.Include
     private String name;
 }

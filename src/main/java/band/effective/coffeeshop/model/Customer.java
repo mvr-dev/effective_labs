@@ -19,28 +19,34 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Customer {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NotEmpty
     @NonNull
     @Size(max = 250)
+    @EqualsAndHashCode.Include
     private String name;
 
     @NotEmpty
     @NonNull
     @Size(max = 250)
+    @EqualsAndHashCode.Include
     private String surname;
 
     @Email(message = "non valid email")
     @NonNull
     @NotEmpty
+    @EqualsAndHashCode.Include
     private String email;
 
     @NonNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @EqualsAndHashCode.Include
     private LocalDate birthday;
 
     @NonNull
