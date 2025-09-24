@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Data
@@ -44,10 +45,10 @@ public class Coffee {
 
     @NonNull
     @Min(0)
-    private Double price;
+    private BigDecimal price;
 
     @NonNull
     @Min(0)
-    private Double costPrice;
+    private BigDecimal costPrice;
 
 }

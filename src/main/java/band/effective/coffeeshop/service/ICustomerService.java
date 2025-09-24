@@ -3,17 +3,18 @@ package band.effective.coffeeshop.service;
 import band.effective.coffeeshop.model.Customer;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ICustomerService {
 
     List<Customer> getAllCustomers();
 
-    Customer getCustomerById(Long id) ;
+    Optional<Customer> getCustomerById(long id) ;
 
-    Customer updateCustomer(Customer Customer);
+    Customer updateCustomer(long id,Customer customer);
 
-    Customer addCustomer(Customer Customer) ;
+    Customer addCustomer(Customer customer) ;
 
 
-    public void deleteCustomer(Customer Customer);
+    void deleteCustomer(long id);
 }
