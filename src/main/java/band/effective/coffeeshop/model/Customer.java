@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -27,7 +28,7 @@ public class Customer {
     private Long id;
 
     @NotEmpty
-    @NonNull
+    @NotNull
     @Size(max = 250)
     @EqualsAndHashCode.Include
     private String name;
@@ -39,17 +40,15 @@ public class Customer {
     private String surname;
 
     @Email(message = "non valid email")
-    @NonNull
+    @NotNull
     @NotEmpty
-    @EqualsAndHashCode.Include
     private String email;
 
-    @NonNull
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @EqualsAndHashCode.Include
     private LocalDate birthday;
 
-    @NonNull
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate lastOrder;
 

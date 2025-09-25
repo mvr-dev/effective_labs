@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -23,14 +24,12 @@ public class Ingredient {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NonNull
+    @NotNull
     @NotEmpty
-    @EqualsAndHashCode.Include
     private String name;
 
-    @NonNull
+    @NotNull
     @Min(value = 0)
-    @EqualsAndHashCode.Include
     private BigDecimal quantity;
   
     @ManyToMany(mappedBy = "ingredients")
@@ -39,10 +38,9 @@ public class Ingredient {
     @EqualsAndHashCode.Exclude
     private Set<Coffee> coffeesWith;
 
-    @NonNull
+    @NotNull
     @Min(0)
     @JsonAlias({"price_per_one", "cost_per_one"})
-    @EqualsAndHashCode.Include
     private BigDecimal costPerOne;
 
 

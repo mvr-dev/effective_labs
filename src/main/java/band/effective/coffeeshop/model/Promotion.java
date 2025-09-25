@@ -3,6 +3,7 @@ package band.effective.coffeeshop.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -17,14 +18,14 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Promotion {
     @Id
     @GeneratedValue
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NonNull
-    @EqualsAndHashCode.Include
+    @NotNull
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -36,9 +37,8 @@ public class Promotion {
     @EqualsAndHashCode.Exclude
     private List<Coffee> promotedCoffees;
 
-    @NonNull
+    @NotNull
     @Min(0)
-    @EqualsAndHashCode.Include
     private BigDecimal promotionPrice;
 
     @ManyToMany(mappedBy = "promotions")

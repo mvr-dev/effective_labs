@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -27,17 +28,15 @@ public class CustomerOrder {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NonNull
+    @NotNull
     @ManyToOne
-    @EqualsAndHashCode.Include
     private Barista barista;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Include
     private Customer customer;
 
-    @NonNull
+    @NotNull
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "coffee_order",
             joinColumns = @JoinColumn(name = "order_id"),
@@ -47,11 +46,10 @@ public class CustomerOrder {
     @EqualsAndHashCode.Exclude
     private List<Coffee> coffees;
 
-    @NonNull
-    @EqualsAndHashCode.Include
+    @NotNull
     private OrderStatus status;
 
-    @NonNull
+    @NotNull
     @Min(0)
     @EqualsAndHashCode.Include
     private BigDecimal price;
@@ -65,6 +63,5 @@ public class CustomerOrder {
     @EqualsAndHashCode.Exclude
     private List<Promotion> promotions;
 
-    @EqualsAndHashCode.Include
     private LocalDateTime orderTime;
 }

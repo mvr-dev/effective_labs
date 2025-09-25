@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -20,14 +21,13 @@ public class Barista {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NonNull
+    @NotNull
     @NotEmpty
     @Size(max=250)
-    @EqualsAndHashCode.Include
     private String surname;
-    @NonNull
+
+    @NotNull
     @NotEmpty
     @Size(max=250)
-    @EqualsAndHashCode.Include
     private String name;
 }

@@ -23,10 +23,9 @@ public class Coffee {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NonNull
+    @NotNull
     @NotEmpty
     @Size(max=250)
-    @EqualsAndHashCode.Include
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -46,18 +45,16 @@ public class Coffee {
     @ManyToMany(mappedBy = "promotedCoffees")
     private Set<Promotion> promotions;
 
-    @NonNull
+    @NotNull
     @Min(0)
     @Max(100000)
     @Positive
-    @EqualsAndHashCode.Include
     private BigDecimal price;
 
-    @NonNull
+    @NotNull
     @Min(0)
     @Max(100000)
     @Positive
-    @EqualsAndHashCode.Include
     private BigDecimal costPrice;
 
 
